@@ -33,6 +33,7 @@ Progress: [███░░░░░░░] 29%
 **Recent Trend:**
 - Last 5 plans: 01-01 (32 min), 01-02 (18 min), 02-01 (20 min), 02-02 (28 min)
 - Trend: Stable
+| Phase 03 P01 | 14 min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -49,6 +50,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Reject sensitive field requests unless explicitly opted in and register API rate limiting at boot — Enforces SAFE-01 guardrail defaults in code
 - [Phase 02]: Normalize keyword/location, canonical maps URLs, and place IDs into one intake contract — Satisfies INPT-01/02/03 without branching runner logic
 - [Phase 02]: Persist lifecycle/progress metrics and expose polling job visibility endpoint — Satisfies JOBS-01/02 with durable state
+- [Phase 03]: Required collection.maxPlaces on intake so each run has an explicit depth contract.
+- [Phase 03]: Persisted collection controls as JSON in jobs records for worker-consumable, migration-safe config.
 
 ### Pending Todos
 

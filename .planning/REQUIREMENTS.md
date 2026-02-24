@@ -18,7 +18,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Coverage & Deduplication
 
 - [ ] **COVR-01**: User can collect results beyond the first visible viewport/page
-- [ ] **COVR-02**: User can configure collection depth/limit for a run
+- [x] **COVR-02**: User can configure collection depth/limit for a run
 - [ ] **COVR-03**: User receives deduplicated place results across overlapping scans
 
 ### Place Data
@@ -75,7 +75,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | JOBS-01 | Phase 2 | Complete |
 | JOBS-02 | Phase 2 | Complete |
 | COVR-01 | Phase 3 | Pending |
-| COVR-02 | Phase 3 | Pending |
+| COVR-02 | Phase 3 | Complete |
 | COVR-03 | Phase 3 | Pending |
 | DATA-01 | Phase 4 | Pending |
 | DATA-02 | Phase 4 | Pending |

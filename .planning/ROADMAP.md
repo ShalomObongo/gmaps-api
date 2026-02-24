@@ -57,10 +57,11 @@ Plans:
   1. User can collect place results beyond the first visible viewport/page.
   2. User can set a depth or limit value that changes how far a run continues collecting.
   3. User receives a deduplicated place list even when scan areas overlap.
-**Plans**: 2 plans
+**Plans**: 3 plans
 Plans:
 - [ ] 03-01-PLAN.md - Add typed, persisted collection depth controls so each run has durable coverage limits.
-- [ ] 03-02-PLAN.md - Implement bounded deep traversal and write-time deduplication for unique place outputs.
+- [ ] 03-02-PLAN.md - Build bounded traversal plus storage-level dedup foundations for unique place outputs.
+- [ ] 03-03-PLAN.md - Integrate worker and status metrics so dedup behavior is observable during runs.
 
 ### Phase 4: Place Detail Extraction
 **Goal**: Users receive reliable structured place records with core identity/location data and available business details.
@@ -110,7 +111,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 |-------|----------------|--------|-----------|
 | 1. Local Runtime Safety Baseline | 2/2 | Complete | 2026-02-25 |
 | 2. Job Intake and Visibility | 2/2 | Complete | 2026-02-25 |
-| 3. Coverage and Deduplication | 0/TBD | Not started | - |
+| 3. Coverage and Deduplication | 0/3 | Not started | - |
 | 4. Place Detail Extraction | 0/TBD | Not started | - |
 | 5. Reviews Collection Controls | 0/TBD | Not started | - |
 | 6. Results API Access | 0/TBD | Not started | - |
