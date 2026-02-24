@@ -3,6 +3,7 @@ import { loadEnv } from "./config/env.js";
 import { RUNTIME_DEFAULTS } from "./config/runtime-defaults.js";
 import { createDatabase } from "./storage/db.js";
 import { createJobsRepo } from "./storage/jobs-repo.js";
+import { createPlacesRepo } from "./storage/places-repo.js";
 import { registerRateLimitPlugin } from "./api/plugins/rate-limit.js";
 import { registerJobRoutes } from "./api/routes/jobs.js";
 import { registerJobStatusRoutes } from "./api/routes/job-status.js";
@@ -22,8 +23,10 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
   const app = Fastify({ logger: options.logger ?? true });
   const db = createDatabase(options.databaseFile ?? env.DATABASE_FILE);
   const jobsRepo = createJobsRepo(db);
+  const placesRepo = createPlacesRepo(db);
   const worker = createJobsWorker({
     jobsRepo,
+    placesRepo,
     pollIntervalMs: options.workerPollIntervalMs,
     heartbeatIntervalMs: options.workerHeartbeatIntervalMs,
     executeJob: options.workerExecuteJob
