@@ -14,7 +14,9 @@ export const jobPolicySchema = z.object({
 export const jobInputSchema = z.object({
   query: z.string().min(1),
   location: z.string().min(1).optional(),
-  policy: jobPolicySchema
+  policy: jobPolicySchema,
+  includeSensitiveFields: z.boolean().optional(),
+  requestedFields: z.array(z.string().min(1)).optional()
 });
 
 export type JobInput = z.infer<typeof jobInputSchema>;

@@ -3,7 +3,9 @@ import { loadEnv } from "./config/env.js";
 import { RUNTIME_DEFAULTS } from "./config/runtime-defaults.js";
 import { createDatabase } from "./storage/db.js";
 import { createJobsRepo } from "./storage/jobs-repo.js";
+import { registerRateLimitPlugin } from "./api/plugins/rate-limit.js";
 import { registerJobRoutes } from "./api/routes/jobs.js";
+import { GUARDRAIL_NOTICE } from "./safety/guardrails.js";
 
 export type BuildServerOptions = {
   databaseFile?: string;
@@ -20,9 +22,10 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
     db.close();
   });
 
+  await registerRateLimitPlugin(app);
   await registerJobRoutes(app, jobsRepo);
 
-  app.get("/health", async () => ({ ok: true }));
+  app.get("/health", async () => ({ ok: true, notice: GUARDRAIL_NOTICE }));
 
   return app;
 }
@@ -33,7 +36,7 @@ export function startupBanner(): string {
     "- local-only defaults active",
     "- paid proxy/captcha integrations are optional and disabled by default",
     `- default runtime policy: ${JSON.stringify(RUNTIME_DEFAULTS)}`,
-    "- guardrails: responsible-use defaults enabled; sensitive fields are opt-in"
+    `- guardrails: ${GUARDRAIL_NOTICE}`
   ].join("\n");
 }
 
