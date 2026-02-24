@@ -1,19 +1,34 @@
 import type { JobInput } from "../../api/schemas/job-input.js";
 
+export const DEFAULT_COLLECTION_CONTROLS = {
+  maxScrollSteps: 20,
+  maxViewportPans: 0
+} as const;
+
+export type NormalizedCollectionControls = {
+  maxPlaces: number;
+  maxScrollSteps: number;
+  maxViewportPans: number;
+};
+
 export type NormalizedIntakeTarget = {
   source: JobInput["inputType"];
   query: string | null;
   location: string | null;
   placeId: string | null;
+  collection: NormalizedCollectionControls;
 };
 
 export function normalizeIntakeInput(input: JobInput): NormalizedIntakeTarget {
+  const collection = normalizeCollectionControls(input);
+
   if (input.inputType === "keyword_location") {
     return {
       source: input.inputType,
       query: input.query,
       location: input.location,
-      placeId: null
+      placeId: null,
+      collection
     };
   }
 
@@ -22,7 +37,8 @@ export function normalizeIntakeInput(input: JobInput): NormalizedIntakeTarget {
       source: input.inputType,
       query: null,
       location: null,
-      placeId: input.placeId
+      placeId: input.placeId,
+      collection
     };
   }
 
@@ -44,7 +60,16 @@ export function normalizeIntakeInput(input: JobInput): NormalizedIntakeTarget {
     source: input.inputType,
     query,
     location: null,
-    placeId: placeId?.length ? placeId : null
+    placeId: placeId?.length ? placeId : null,
+    collection
+  };
+}
+
+function normalizeCollectionControls(input: JobInput): NormalizedCollectionControls {
+  return {
+    maxPlaces: input.collection.maxPlaces,
+    maxScrollSteps: input.collection.maxScrollSteps ?? DEFAULT_COLLECTION_CONTROLS.maxScrollSteps,
+    maxViewportPans: input.collection.maxViewportPans ?? DEFAULT_COLLECTION_CONTROLS.maxViewportPans
   };
 }
 

@@ -1,5 +1,27 @@
 import { z } from "zod";
 
+const COLLECTION_LIMITS = {
+  maxPlaces: { min: 1, max: 500 },
+  maxScrollSteps: { min: 0, max: 100 },
+  maxViewportPans: { min: 0, max: 25 }
+} as const;
+
+export const collectionControlsSchema = z.object({
+  maxPlaces: z.number().int().min(COLLECTION_LIMITS.maxPlaces.min).max(COLLECTION_LIMITS.maxPlaces.max),
+  maxScrollSteps: z
+    .number()
+    .int()
+    .min(COLLECTION_LIMITS.maxScrollSteps.min)
+    .max(COLLECTION_LIMITS.maxScrollSteps.max)
+    .optional(),
+  maxViewportPans: z
+    .number()
+    .int()
+    .min(COLLECTION_LIMITS.maxViewportPans.min)
+    .max(COLLECTION_LIMITS.maxViewportPans.max)
+    .optional()
+});
+
 export const jobPolicySchema = z.object({
   maxRetries: z.number().int().min(0).max(6).optional(),
   initialBackoffMs: z.number().int().min(100).max(60_000).optional(),
@@ -14,7 +36,8 @@ export const jobPolicySchema = z.object({
 const sharedJobOptionsSchema = z.object({
   policy: jobPolicySchema,
   includeSensitiveFields: z.boolean().optional(),
-  requestedFields: z.array(z.string().min(1)).optional()
+  requestedFields: z.array(z.string().min(1)).optional(),
+  collection: collectionControlsSchema
 });
 
 const keywordLocationInputSchema = sharedJobOptionsSchema.extend({
@@ -39,4 +62,5 @@ export const jobInputSchema = z.discriminatedUnion("inputType", [
   placeIdInputSchema
 ]);
 
+export type CollectionControlsInput = z.infer<typeof collectionControlsSchema>;
 export type JobInput = z.infer<typeof jobInputSchema>;

@@ -81,7 +81,8 @@ export async function registerJobRoutes(app: FastifyInstance, jobsRepo: JobsRepo
           inputType: normalizedTarget.source,
           query: normalizedTarget.query,
           location: normalizedTarget.location,
-          placeId: normalizedTarget.placeId
+          placeId: normalizedTarget.placeId,
+          collection: normalizedTarget.collection
         },
         fields: sensitivePolicy.fields,
         guardrails: {
