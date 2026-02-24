@@ -34,6 +34,7 @@ Progress: [███░░░░░░░] 29%
 - Last 5 plans: 01-01 (32 min), 01-02 (18 min), 02-01 (20 min), 02-02 (28 min)
 - Trend: Stable
 | Phase 03 P01 | 14 min | 2 tasks | 8 files |
+| Phase 03 P02 | 11 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -52,6 +53,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Persist lifecycle/progress metrics and expose polling job visibility endpoint — Satisfies JOBS-01/02 with durable state
 - [Phase 03]: Required collection.maxPlaces on intake so each run has an explicit depth contract.
 - [Phase 03]: Persisted collection controls as JSON in jobs records for worker-consumable, migration-safe config.
+- [Phase 03]: Canonical place keys use placeId first with deterministic hash fallback for missing IDs.
+- [Phase 03]: Dedup correctness is enforced in SQLite using UNIQUE(job_id, place_key) and ON CONFLICT no-op inserts.
 
 ### Pending Todos
 
