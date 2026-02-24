@@ -44,7 +44,10 @@ Plans:
   2. User can submit a job using either a Google Maps URL or a place ID input.
   3. User can observe each run move through queued, running, completed, or failed states.
   4. User can view live progress and basic run metrics while the job is executing.
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 02-01-PLAN.md - Add typed multi-format intake normalization for keyword/location, maps URL, and place ID job submission.
+- [ ] 02-02-PLAN.md - Persist lifecycle/progress state and expose polling visibility for live job status metrics.
 
 ### Phase 3: Coverage and Deduplication
 **Goal**: Users can collect deeper result sets and receive deduplicated places across overlapping scans.
