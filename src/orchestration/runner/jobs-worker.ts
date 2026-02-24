@@ -4,6 +4,8 @@ import type { JobsRepo, UpdateProgressInput } from "../../storage/jobs-repo.js";
 import type { CollectionConfig, JobRecord, PlaceCandidate } from "../../storage/schema.js";
 import type { RuntimePolicyInput } from "../../config/runtime-defaults.js";
 import type { PlacesRepo } from "../../storage/places-repo.js";
+import { normalizePlaceRecord } from "../../crawler/maps/normalize-place-record.js";
+import type { ExtractedPlaceDetails } from "../../crawler/maps/extract-place-details.js";
 import {
   collectPlacesFromMaps,
   type CollectPlacesParams,
@@ -32,6 +34,7 @@ export type CreateJobsWorkerOptions = {
   heartbeatIntervalMs?: number;
   executeJob?: WorkerExecuteJob;
   discoverStep?: (step: CollectStep, job: JobRecord) => Promise<PlaceCandidate[]>;
+  enrichCandidate?: (candidate: PlaceCandidate, job: JobRecord) => Promise<ExtractedPlaceDetails>;
 };
 
 export type JobsWorker = {
@@ -44,6 +47,7 @@ export function createJobsWorker(options: CreateJobsWorkerOptions): JobsWorker {
   const heartbeatIntervalMs = Math.max(100, options.heartbeatIntervalMs ?? 1_000);
   const executeJob = options.executeJob ?? defaultExecuteJob;
   const discoverStep = options.discoverStep ?? defaultDiscoverStep;
+  const enrichCandidate = options.enrichCandidate ?? defaultEnrichCandidate;
 
   let timer: NodeJS.Timeout | undefined;
   let inFlight = false;
@@ -56,7 +60,14 @@ export function createJobsWorker(options: CreateJobsWorkerOptions): JobsWorker {
 
     inFlight = true;
     try {
-        await processNextJob(options.jobsRepo, options.placesRepo, executeJob, discoverStep, heartbeatIntervalMs);
+      await processNextJob(
+        options.jobsRepo,
+        options.placesRepo,
+        executeJob,
+        discoverStep,
+        enrichCandidate,
+        heartbeatIntervalMs
+      );
     } finally {
       inFlight = false;
     }
@@ -92,6 +103,7 @@ async function processNextJob(
   placesRepo: PlacesRepo,
   executeJob: WorkerExecuteJob,
   discoverStep: (step: CollectStep, job: JobRecord) => Promise<PlaceCandidate[]>,
+  enrichCandidate: (candidate: PlaceCandidate, job: JobRecord) => Promise<ExtractedPlaceDetails>,
   heartbeatIntervalMs: number
 ): Promise<void> {
   const claimedJob = jobsRepo.claimNextQueued();
@@ -126,6 +138,7 @@ async function processNextJob(
         job: claimedJob,
         placesRepo,
         discoverStep,
+        enrichCandidate,
         collectPlaces: collectPlacesFromMaps
       });
     }
@@ -170,6 +183,7 @@ type ExecuteCollectorJobInput = {
   job: JobRecord;
   placesRepo: PlacesRepo;
   discoverStep: (step: CollectStep, job: JobRecord) => Promise<PlaceCandidate[]>;
+  enrichCandidate: (candidate: PlaceCandidate, job: JobRecord) => Promise<ExtractedPlaceDetails>;
   collectPlaces: (params: CollectPlacesParams) => Promise<{
     candidates: PlaceCandidate[];
     discoveredCount: number;
@@ -185,9 +199,18 @@ async function executeCollectorJob(input: ExecuteCollectorJobInput): Promise<Wor
 
   let uniqueAcceptedCount = 0;
   for (const candidate of collected.candidates) {
+    const normalizedCore = normalizePlaceRecord(candidate);
+    const details = await input.enrichCandidate(normalizedCore, input.job);
+    const enrichedCandidate: PlaceCandidate = {
+      ...normalizedCore,
+      website: details.website,
+      phone: details.phone,
+      openingHoursJson: details.openingHoursJson
+    };
+
     const inserted = input.placesRepo.insert({
       jobId: input.job.id,
-      candidate
+      candidate: enrichedCandidate
     });
 
     if (inserted.inserted) {
@@ -218,10 +241,24 @@ async function defaultDiscoverStep(step: CollectStep): Promise<PlaceCandidate[]>
     {
       placeId: `stub-${suffix}`,
       name: `Stub Place ${suffix}`,
+      category: null,
+      rating: null,
+      reviewsCount: null,
       address: null,
       mapsUrl: null,
       lat: null,
-      lng: null
+      lng: null,
+      website: null,
+      phone: null,
+      openingHoursJson: null
     }
   ];
+}
+
+async function defaultEnrichCandidate(candidate: PlaceCandidate): Promise<ExtractedPlaceDetails> {
+  return {
+    website: null,
+    phone: null,
+    openingHoursJson: null
+  };
 }

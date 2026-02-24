@@ -32,6 +32,9 @@ export function createPlacesRepo(db: DatabaseHandle): PlacesRepo {
       maps_url,
       lat,
       lng,
+      website,
+      phone,
+      opening_hours_json,
       discovered_at
     )
     VALUES (
@@ -46,6 +49,9 @@ export function createPlacesRepo(db: DatabaseHandle): PlacesRepo {
       @mapsUrl,
       @lat,
       @lng,
+      @website,
+      @phone,
+      @openingHoursJson,
       @discoveredAt
     )
     ON CONFLICT(job_id, place_key) DO NOTHING
@@ -65,6 +71,9 @@ export function createPlacesRepo(db: DatabaseHandle): PlacesRepo {
       maps_url AS mapsUrl,
       lat,
       lng,
+      website,
+      phone,
+      opening_hours_json AS openingHoursJson,
       discovered_at AS discoveredAt
     FROM places
     WHERE job_id = ?
@@ -86,6 +95,9 @@ export function createPlacesRepo(db: DatabaseHandle): PlacesRepo {
         mapsUrl: candidate.mapsUrl,
         lat: candidate.lat,
         lng: candidate.lng,
+        website: candidate.website,
+        phone: candidate.phone,
+        openingHoursJson: candidate.openingHoursJson,
         discoveredAt
       });
 

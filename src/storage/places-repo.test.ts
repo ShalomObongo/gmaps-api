@@ -32,7 +32,10 @@ describe("places repository dedup", () => {
         address: "123 Main St",
         mapsUrl: "https://maps.google.com/?cid=1",
         lat: 47.6097,
-        lng: -122.3331
+        lng: -122.3331,
+        website: "https://cafe-one.example",
+        phone: "+1 206 555 1000",
+        openingHoursJson: '["Mon 9-5"]'
       }
     });
     const second = repo.insert({
@@ -46,7 +49,10 @@ describe("places repository dedup", () => {
         address: "123 Main St",
         mapsUrl: "https://maps.google.com/?cid=1",
         lat: 47.6097,
-        lng: -122.3331
+        lng: -122.3331,
+        website: "https://cafe-one.example",
+        phone: "+1 206 555 1000",
+        openingHoursJson: '["Mon 9-5"]'
       }
     });
 
@@ -59,7 +65,10 @@ describe("places repository dedup", () => {
         category: "Cafe",
         rating: 4.6,
         reviewsCount: 128,
-        address: "123 Main St"
+        address: "123 Main St",
+        website: "https://cafe-one.example",
+        phone: "+1 206 555 1000",
+        openingHoursJson: '["Mon 9-5"]'
       })
     ]);
 
@@ -82,7 +91,10 @@ describe("places repository dedup", () => {
         address: "1 Shared Rd",
         mapsUrl: null,
         lat: null,
-        lng: null
+        lng: null,
+        website: null,
+        phone: null,
+        openingHoursJson: null
       }
     });
     repo.insert({
@@ -96,7 +108,10 @@ describe("places repository dedup", () => {
         address: "1 Shared Rd",
         mapsUrl: null,
         lat: null,
-        lng: null
+        lng: null,
+        website: null,
+        phone: null,
+        openingHoursJson: null
       }
     });
 
@@ -122,7 +137,10 @@ describe("places repository dedup", () => {
         address: "500 Pine St",
         mapsUrl: null,
         lat: 47.611234,
-        lng: -122.337889
+        lng: -122.337889,
+        website: null,
+        phone: null,
+        openingHoursJson: null
       }
     });
 
@@ -137,7 +155,10 @@ describe("places repository dedup", () => {
         address: "500   Pine St",
         mapsUrl: null,
         lat: 47.6112344,
-        lng: -122.3378894
+        lng: -122.3378894,
+        website: null,
+        phone: null,
+        openingHoursJson: null
       }
     });
 
@@ -182,7 +203,10 @@ describe("places repository dedup", () => {
         address: null,
         mapsUrl: null,
         lat: null,
-        lng: null
+        lng: null,
+        website: null,
+        phone: null,
+        openingHoursJson: null
       }
     });
 
@@ -191,6 +215,9 @@ describe("places repository dedup", () => {
     expect(names.has("category")).toBe(true);
     expect(names.has("rating")).toBe(true);
     expect(names.has("reviews_count")).toBe(true);
+    expect(names.has("website")).toBe(true);
+    expect(names.has("phone")).toBe(true);
+    expect(names.has("opening_hours_json")).toBe(true);
     expect(repo.listByJob("job-upgrade")).toHaveLength(1);
 
     db.close();

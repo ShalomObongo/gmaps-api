@@ -48,30 +48,68 @@ describe("jobs worker ingestion pipeline", () => {
       placesRepo,
       pollIntervalMs: 10,
       heartbeatIntervalMs: 10,
+      enrichCandidate: async (candidate) => {
+        if (candidate.placeId === "pid-a") {
+          return {
+            website: "https://place-a.example",
+            phone: "+1 206 555 0101",
+            openingHoursJson: '["Mon 9-5"]'
+          };
+        }
+
+        return {
+          website: null,
+          phone: null,
+          openingHoursJson: null
+        };
+      },
       discoverStep: async () => {
         const batch = scripted[Math.min(call, scripted.length - 1)] ?? [];
         call += 1;
         return batch.map((id) => ({
           placeId: `pid-${id}`,
           name: `Place ${id}`,
+          category: null,
+          rating: null,
+          reviewsCount: null,
           address: null,
           mapsUrl: null,
           lat: null,
-          lng: null
+          lng: null,
+          website: null,
+          phone: null,
+          openingHoursJson: null
         }));
       }
     });
 
     worker.start();
-    await waitFor(() => jobsRepo.getById(job.id)?.status === "completed", 3_000);
+    await waitFor(() => {
+      const status = jobsRepo.getById(job.id)?.status;
+      return status === "completed" || status === "failed";
+    }, 3_000);
     await worker.stop();
 
     const completed = jobsRepo.getById(job.id);
+    expect(completed?.failureReason).toBeNull();
     expect(completed?.status).toBe("completed");
     expect(completed?.discoveredCount).toBe(9);
     expect(completed?.processedCount).toBe(5);
     expect(completed?.processedCount).toBeLessThanOrEqual(completed?.discoveredCount ?? 0);
-    expect(placesRepo.listByJob(job.id)).toHaveLength(5);
+    const places = placesRepo.listByJob(job.id);
+    expect(places).toHaveLength(5);
+    expect(places[0]).toMatchObject({
+      placeId: "pid-a",
+      website: "https://place-a.example",
+      phone: "+1 206 555 0101",
+      openingHoursJson: '["Mon 9-5"]'
+    });
+    expect(places[1]).toMatchObject({
+      placeId: "pid-b",
+      website: null,
+      phone: null,
+      openingHoursJson: null
+    });
   });
 });
 

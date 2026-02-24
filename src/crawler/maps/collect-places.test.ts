@@ -76,10 +76,16 @@ function createScriptedDiscoverer(counts: number[]): (step: {
     return Array.from({ length: count }, (_, index) => ({
       placeId: `pid-${call}-${index}`,
       name: `Place ${call}-${index}`,
+      category: null,
+      rating: null,
+      reviewsCount: null,
       address: null,
       mapsUrl: null,
       lat: null,
-      lng: null
+      lng: null,
+      website: null,
+      phone: null,
+      openingHoursJson: null
     }));
   };
 }
