@@ -1,0 +1,62 @@
+import Fastify, { type FastifyInstance } from "fastify";
+import { loadEnv } from "./config/env.js";
+import { RUNTIME_DEFAULTS } from "./config/runtime-defaults.js";
+import { createDatabase } from "./storage/db.js";
+import { createJobsRepo } from "./storage/jobs-repo.js";
+import { registerJobRoutes } from "./api/routes/jobs.js";
+
+export type BuildServerOptions = {
+  databaseFile?: string;
+  logger?: boolean;
+};
+
+export async function buildServer(options: BuildServerOptions = {}): Promise<FastifyInstance> {
+  const env = loadEnv();
+  const app = Fastify({ logger: options.logger ?? true });
+  const db = createDatabase(options.databaseFile ?? env.DATABASE_FILE);
+  const jobsRepo = createJobsRepo(db);
+
+  app.addHook("onClose", async () => {
+    db.close();
+  });
+
+  await registerJobRoutes(app, jobsRepo);
+
+  app.get("/health", async () => ({ ok: true }));
+
+  return app;
+}
+
+export function startupBanner(): string {
+  return [
+    "gmaps-api local runtime safety baseline",
+    "- local-only defaults active",
+    "- paid proxy/captcha integrations are optional and disabled by default",
+    `- default runtime policy: ${JSON.stringify(RUNTIME_DEFAULTS)}`,
+    "- guardrails: responsible-use defaults enabled; sensitive fields are opt-in"
+  ].join("\n");
+}
+
+async function runCli(): Promise<void> {
+  const env = loadEnv();
+  const checkOnly = process.argv.includes("--check");
+  const app = await buildServer({ logger: !checkOnly });
+
+  if (checkOnly) {
+    await app.ready();
+    console.log(startupBanner());
+    await app.close();
+    return;
+  }
+
+  await app.listen({ port: env.PORT, host: "0.0.0.0" });
+  console.log(startupBanner());
+}
+
+const mainPath = process.argv[1] ?? "";
+if (mainPath.endsWith("server.js")) {
+  runCli().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}
