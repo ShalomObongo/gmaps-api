@@ -11,12 +11,32 @@ export const jobPolicySchema = z.object({
   captchaMode: z.enum(["off", "optional"]).optional()
 }).optional();
 
-export const jobInputSchema = z.object({
-  query: z.string().min(1),
-  location: z.string().min(1).optional(),
+const sharedJobOptionsSchema = z.object({
   policy: jobPolicySchema,
   includeSensitiveFields: z.boolean().optional(),
   requestedFields: z.array(z.string().min(1)).optional()
 });
+
+const keywordLocationInputSchema = sharedJobOptionsSchema.extend({
+  inputType: z.literal("keyword_location"),
+  query: z.string().min(1),
+  location: z.string().min(1)
+}).strict();
+
+const mapsUrlInputSchema = sharedJobOptionsSchema.extend({
+  inputType: z.literal("maps_url"),
+  mapsUrl: z.url()
+}).strict();
+
+const placeIdInputSchema = sharedJobOptionsSchema.extend({
+  inputType: z.literal("place_id"),
+  placeId: z.string().min(1)
+}).strict();
+
+export const jobInputSchema = z.discriminatedUnion("inputType", [
+  keywordLocationInputSchema,
+  mapsUrlInputSchema,
+  placeIdInputSchema
+]);
 
 export type JobInput = z.infer<typeof jobInputSchema>;
