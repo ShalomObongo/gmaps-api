@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Local Runtime Safety Baseline** - Local execution works with guardrails and reliability defaults. (Completed 2026-02-25)
 - [x] **Phase 2: Job Intake and Visibility** - Users can submit jobs through all v1 inputs and track them while running. (Completed 2026-02-25)
-- [ ] **Phase 3: Coverage and Deduplication** - Runs go beyond first viewport and return unique places.
+- [x] **Phase 3: Coverage and Deduplication** - Runs go beyond first viewport and return unique places. (Completed 2026-02-25)
 - [ ] **Phase 4: Place Detail Extraction** - Place records include core and available business/contact fields.
 - [ ] **Phase 5: Reviews Collection Controls** - Runs can collect reviews with configurable ordering and caps.
 - [ ] **Phase 6: Results API Access** - Completed run data is retrievable through structured API endpoints.
@@ -59,9 +59,9 @@ Plans:
   3. User receives a deduplicated place list even when scan areas overlap.
 **Plans**: 3 plans
 Plans:
-- [ ] 03-01-PLAN.md - Add typed, persisted collection depth controls so each run has durable coverage limits.
-- [ ] 03-02-PLAN.md - Build bounded traversal plus storage-level dedup foundations for unique place outputs.
-- [ ] 03-03-PLAN.md - Integrate worker and status metrics so dedup behavior is observable during runs.
+- [x] 03-01-PLAN.md - Add typed, persisted collection depth controls so each run has durable coverage limits.
+- [x] 03-02-PLAN.md - Build bounded traversal plus storage-level dedup foundations for unique place outputs.
+- [x] 03-03-PLAN.md - Integrate worker and status metrics so dedup behavior is observable during runs.
 
 ### Phase 4: Place Detail Extraction
 **Goal**: Users receive reliable structured place records with core identity/location data and available business details.
@@ -111,7 +111,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 |-------|----------------|--------|-----------|
 | 1. Local Runtime Safety Baseline | 2/2 | Complete | 2026-02-25 |
 | 2. Job Intake and Visibility | 2/2 | Complete | 2026-02-25 |
-| 3. Coverage and Deduplication | 0/3 | Not started | - |
+| 3. Coverage and Deduplication | 3/3 | Complete | 2026-02-25 |
 | 4. Place Detail Extraction | 0/TBD | Not started | - |
 | 5. Reviews Collection Controls | 0/TBD | Not started | - |
 | 6. Results API Access | 0/TBD | Not started | - |
