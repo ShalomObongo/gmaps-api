@@ -12,7 +12,7 @@ This roadmap delivers a local-first Google Maps scraping API from foundation con
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Local Runtime Safety Baseline** - Local execution works with guardrails and reliability defaults.
+- [x] **Phase 1: Local Runtime Safety Baseline** - Local execution works with guardrails and reliability defaults. (Completed 2026-02-25)
 - [ ] **Phase 2: Job Intake and Visibility** - Users can submit jobs through all v1 inputs and track them while running.
 - [ ] **Phase 3: Coverage and Deduplication** - Runs go beyond first viewport and return unique places.
 - [ ] **Phase 4: Place Detail Extraction** - Place records include core and available business/contact fields.
@@ -32,8 +32,8 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User sees responsible-use guardrails, and sensitive field collection stays opt-in by default.
 **Plans**: 2 plans
 Plans:
-- [ ] 01-01-PLAN.md - Bootstrap local runtime foundation and queued job intake with paid-service-free defaults.
-- [ ] 01-02-PLAN.md - Enforce retry/backoff/pacing and API safety guardrails with sensitive-field opt-in.
+- [x] 01-01-PLAN.md - Bootstrap local runtime foundation and queued job intake with paid-service-free defaults.
+- [x] 01-02-PLAN.md - Enforce retry/backoff/pacing and API safety guardrails with sensitive-field opt-in.
 
 ### Phase 2: Job Intake and Visibility
 **Goal**: Users can submit scrape jobs through all supported v1 inputs and observe run lifecycle in real time.
@@ -102,7 +102,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Local Runtime Safety Baseline | 0/2 | Not started | - |
+| 1. Local Runtime Safety Baseline | 2/2 | Complete | 2026-02-25 |
 | 2. Job Intake and Visibility | 0/TBD | Not started | - |
 | 3. Coverage and Deduplication | 0/TBD | Not started | - |
 | 4. Place Detail Extraction | 0/TBD | Not started | - |
