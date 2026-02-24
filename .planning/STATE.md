@@ -37,6 +37,7 @@ Progress: [████░░░░░░] 43%
 | Phase 03 P01 | 14 min | 2 tasks | 8 files |
 | Phase 03 P02 | 11 min | 2 tasks | 7 files |
 | Phase 03 P03 | 10 min | 2 tasks | 5 files |
+| Phase 04 P01 | 8min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -59,6 +60,8 @@ Recent decisions affecting current work:
 - [Phase 03]: Dedup correctness is enforced in SQLite using UNIQUE(job_id, place_key) and ON CONFLICT no-op inserts.
 - [Phase 03]: Worker completion stores discovered candidate totals separately from deduplicated unique accepted inserts.
 - [Phase 03]: Status output keeps processedCount compatibility and adds uniqueAcceptedCount for dedup visibility.
+- [Phase 04]: Optional numeric detail parse failures normalize to null to keep best-effort extraction non-fatal.
+- [Phase 04]: SQLite place detail columns are added in place with ensureColumn for backward-compatible local DB upgrades.
 
 ### Pending Todos
 
