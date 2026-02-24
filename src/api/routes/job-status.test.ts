@@ -40,7 +40,10 @@ describe("GET /jobs/:id", () => {
       payload: {
         inputType: "keyword_location",
         query: "coffee",
-        location: "seattle"
+        location: "seattle",
+        collection: {
+          maxPlaces: 25
+        }
       }
     });
     const jobId = createResponse.json().jobId as string;
@@ -52,6 +55,7 @@ describe("GET /jobs/:id", () => {
       status: "queued",
       progress: {
         discoveredCount: 0,
+        uniqueAcceptedCount: 0,
         processedCount: 0,
         failedCount: 0
       }
@@ -71,6 +75,7 @@ describe("GET /jobs/:id", () => {
       status: "running",
       progress: {
         discoveredCount: 3,
+        uniqueAcceptedCount: 1,
         processedCount: 1,
         failedCount: 0
       }
@@ -89,6 +94,7 @@ describe("GET /jobs/:id", () => {
       status: "completed",
       progress: {
         discoveredCount: 3,
+        uniqueAcceptedCount: 3,
         processedCount: 3,
         failedCount: 0,
         failureReason: null

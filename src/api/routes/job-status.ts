@@ -34,6 +34,7 @@ export async function registerJobStatusRoutes(
       progress: {
         discoveredCount: job.discoveredCount,
         processedCount: job.processedCount,
+        uniqueAcceptedCount: job.processedCount,
         failedCount: job.failedCount,
         failureReason: job.failureReason
       },
