@@ -30,7 +30,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. User can start the API and run jobs locally without configuring paid proxy or captcha services.
   2. User-submitted jobs automatically apply retry, backoff, and pacing defaults during execution.
   3. User sees responsible-use guardrails, and sensitive field collection stays opt-in by default.
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 01-01-PLAN.md - Bootstrap local runtime foundation and queued job intake with paid-service-free defaults.
+- [ ] 01-02-PLAN.md - Enforce retry/backoff/pacing and API safety guardrails with sensitive-field opt-in.
 
 ### Phase 2: Job Intake and Visibility
 **Goal**: Users can submit scrape jobs through all supported v1 inputs and observe run lifecycle in real time.
@@ -99,7 +102,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Local Runtime Safety Baseline | 0/TBD | Not started | - |
+| 1. Local Runtime Safety Baseline | 0/2 | Not started | - |
 | 2. Job Intake and Visibility | 0/TBD | Not started | - |
 | 3. Coverage and Deduplication | 0/TBD | Not started | - |
 | 4. Place Detail Extraction | 0/TBD | Not started | - |
