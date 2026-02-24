@@ -29,9 +29,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Reliability & Safety
 
-- [ ] **RELY-01**: User jobs apply retry, backoff, and pacing defaults to reduce block risk
+- [x] **RELY-01**: User jobs apply retry, backoff, and pacing defaults to reduce block risk
 - [x] **RELY-02**: User can run scraper locally without required paid proxy/captcha services
-- [ ] **SAFE-01**: User receives explicit responsible-use and guardrail defaults (rate limit/backoff + sensitive field opt-in model)
+- [x] **SAFE-01**: User receives explicit responsible-use and guardrail defaults (rate limit/backoff + sensitive field opt-in model)
 
 ### Output
 
@@ -80,9 +80,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-01 | Phase 4 | Pending |
 | DATA-02 | Phase 4 | Pending |
 | DATA-03 | Phase 5 | Pending |
-| RELY-01 | Phase 1 | Pending |
+| RELY-01 | Phase 1 | Complete |
 | RELY-02 | Phase 1 | Complete |
-| SAFE-01 | Phase 1 | Pending |
+| SAFE-01 | Phase 1 | Complete |
 | OUTP-01 | Phase 6 | Pending |
 | OUTP-02 | Phase 7 | Pending |
 | OUTP-03 | Phase 7 | Pending |
