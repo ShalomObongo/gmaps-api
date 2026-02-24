@@ -38,6 +38,9 @@ export type JobRecord = {
 export type PlaceCandidate = {
   placeId: string | null;
   name: string;
+  category: string | null;
+  rating: number | null;
+  reviewsCount: number | null;
   address: string | null;
   mapsUrl: string | null;
   lat: number | null;
