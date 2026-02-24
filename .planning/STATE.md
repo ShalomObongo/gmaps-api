@@ -38,6 +38,7 @@ Progress: [████░░░░░░] 43%
 | Phase 03 P02 | 11 min | 2 tasks | 7 files |
 | Phase 03 P03 | 10 min | 2 tasks | 5 files |
 | Phase 04 P01 | 8min | 2 tasks | 6 files |
+| Phase 04 P02 | 10min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,8 @@ Recent decisions affecting current work:
 - [Phase 03]: Status output keeps processedCount compatibility and adds uniqueAcceptedCount for dedup visibility.
 - [Phase 04]: Optional numeric detail parse failures normalize to null to keep best-effort extraction non-fatal.
 - [Phase 04]: SQLite place detail columns are added in place with ensureColumn for backward-compatible local DB upgrades.
+- [Phase 04]: Opening hours are stored as canonical JSON text in openingHoursJson for v1 detail extraction.
+- [Phase 04]: Worker enrichment remains best-effort with nullable contact outputs to avoid run-level failures.
 
 ### Pending Todos
 
