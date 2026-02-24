@@ -69,29 +69,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INPT-01 | Phase TBD | Pending |
-| INPT-02 | Phase TBD | Pending |
-| INPT-03 | Phase TBD | Pending |
-| JOBS-01 | Phase TBD | Pending |
-| JOBS-02 | Phase TBD | Pending |
-| COVR-01 | Phase TBD | Pending |
-| COVR-02 | Phase TBD | Pending |
-| COVR-03 | Phase TBD | Pending |
-| DATA-01 | Phase TBD | Pending |
-| DATA-02 | Phase TBD | Pending |
-| DATA-03 | Phase TBD | Pending |
-| RELY-01 | Phase TBD | Pending |
-| RELY-02 | Phase TBD | Pending |
-| SAFE-01 | Phase TBD | Pending |
-| OUTP-01 | Phase TBD | Pending |
-| OUTP-02 | Phase TBD | Pending |
-| OUTP-03 | Phase TBD | Pending |
+| INPT-01 | Phase 2 | Pending |
+| INPT-02 | Phase 2 | Pending |
+| INPT-03 | Phase 2 | Pending |
+| JOBS-01 | Phase 2 | Pending |
+| JOBS-02 | Phase 2 | Pending |
+| COVR-01 | Phase 3 | Pending |
+| COVR-02 | Phase 3 | Pending |
+| COVR-03 | Phase 3 | Pending |
+| DATA-01 | Phase 4 | Pending |
+| DATA-02 | Phase 4 | Pending |
+| DATA-03 | Phase 5 | Pending |
+| RELY-01 | Phase 1 | Pending |
+| RELY-02 | Phase 1 | Pending |
+| SAFE-01 | Phase 1 | Pending |
+| OUTP-01 | Phase 6 | Pending |
+| OUTP-02 | Phase 7 | Pending |
+| OUTP-03 | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 17 total
-- Mapped to phases: 0
-- Unmapped: 17 ⚠
+- Mapped to phases: 17
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-24*
-*Last updated: 2026-02-24 after initial definition*
+*Last updated: 2026-02-24 after roadmap mapping*
