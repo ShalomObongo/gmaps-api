@@ -45,6 +45,9 @@ export function createDatabase(filePath: string): DatabaseHandle {
       place_key TEXT NOT NULL,
       place_id TEXT,
       name TEXT NOT NULL,
+      category TEXT,
+      rating REAL,
+      reviews_count INTEGER,
       address TEXT,
       maps_url TEXT,
       lat REAL,
@@ -55,6 +58,10 @@ export function createDatabase(filePath: string): DatabaseHandle {
 
     CREATE INDEX IF NOT EXISTS idx_places_job_id ON places(job_id);
   `);
+
+  ensureColumn(db, "places", "category", "TEXT");
+  ensureColumn(db, "places", "rating", "REAL");
+  ensureColumn(db, "places", "reviews_count", "INTEGER");
 
   return db;
 }
