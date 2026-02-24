@@ -5,14 +5,11 @@ import { resolveJobPolicy } from "../../orchestration/policy.js";
 import { GUARDRAIL_NOTICE } from "../../safety/guardrails.js";
 import { resolveSensitiveFieldPolicy } from "../../safety/sensitive-fields.js";
 import type { JobsRepo } from "../../storage/jobs-repo.js";
+import { normalizeIntakeInput } from "../../orchestration/intake/normalize-intake.js";
+import type { JobInput } from "../schemas/job-input.js";
+import type { NormalizedIntakeTarget } from "../../orchestration/intake/normalize-intake.js";
 
-const payloadSchema = z.object({
-  query: z.string(),
-  location: z.string().optional(),
-  policy: z.unknown().optional(),
-  includeSensitiveFields: z.boolean().optional(),
-  requestedFields: z.array(z.string()).optional()
-});
+const payloadSchema = z.unknown();
 
 export async function registerJobRoutes(app: FastifyInstance, jobsRepo: JobsRepo): Promise<void> {
   app.post(
@@ -26,8 +23,29 @@ export async function registerJobRoutes(app: FastifyInstance, jobsRepo: JobsRepo
       }
     },
     async (request, reply) => {
-      const parsedPayload = payloadSchema.parse(request.body);
-      const validatedInput = jobInputSchema.parse(parsedPayload);
+      let validatedInput: JobInput;
+      try {
+        const parsedPayload = payloadSchema.parse(request.body);
+        validatedInput = jobInputSchema.parse(parsedPayload);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return reply.code(400).send({
+            error: "invalid_request",
+            message: z.prettifyError(error)
+          });
+        }
+        throw error;
+      }
+
+      let normalizedTarget: NormalizedIntakeTarget;
+      try {
+        normalizedTarget = normalizeIntakeInput(validatedInput);
+      } catch (error) {
+        return reply.code(400).send({
+          error: "invalid_request",
+          message: (error as Error).message
+        });
+      }
 
       let sensitivePolicy;
       try {
@@ -49,8 +67,8 @@ export async function registerJobRoutes(app: FastifyInstance, jobsRepo: JobsRepo
       });
 
       const queuedJob = jobsRepo.create({
-        query: validatedInput.query,
-        location: validatedInput.location,
+        query: normalizedTarget.query ?? `place_id:${normalizedTarget.placeId}`,
+        location: normalizedTarget.location ?? undefined,
         status: "queued",
         policyJson: JSON.stringify(policy)
       });
@@ -59,6 +77,12 @@ export async function registerJobRoutes(app: FastifyInstance, jobsRepo: JobsRepo
         jobId: queuedJob.id,
         status: queuedJob.status,
         policy,
+        input: {
+          inputType: normalizedTarget.source,
+          query: normalizedTarget.query,
+          location: normalizedTarget.location,
+          placeId: normalizedTarget.placeId
+        },
         fields: sensitivePolicy.fields,
         guardrails: {
           notice: GUARDRAIL_NOTICE,

@@ -22,7 +22,11 @@ describe("POST /jobs", () => {
     const response = await app.inject({
       method: "POST",
       url: "/jobs",
-      payload: { query: "coffee near me" }
+      payload: {
+        inputType: "keyword_location",
+        query: "coffee",
+        location: "seattle wa"
+      }
     });
 
     expect(response.statusCode).toBe(202);
@@ -34,6 +38,103 @@ describe("POST /jobs", () => {
       pacingMs: 1200,
       includeSensitiveFields: false
     });
+    expect(body.input).toMatchObject({
+      inputType: "keyword_location",
+      query: "coffee",
+      location: "seattle wa",
+      placeId: null
+    });
+
+    await app.close();
+  });
+
+  it("accepts canonical maps url payload", async () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const app = await buildServer({ databaseFile: join(workDir, "local.db"), logger: false });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/jobs",
+      payload: {
+        inputType: "maps_url",
+        mapsUrl:
+          "https://www.google.com/maps/search/?api=1&query=coffee+seattle&query_place_id=ChIJVTPokywQkFQRmtVEaUZlJRA"
+      }
+    });
+
+    expect(response.statusCode).toBe(202);
+    const body = response.json();
+    expect(body.input).toMatchObject({
+      inputType: "maps_url",
+      query: "coffee seattle",
+      location: null,
+      placeId: "ChIJVTPokywQkFQRmtVEaUZlJRA"
+    });
+
+    await app.close();
+  });
+
+  it("accepts place id payload", async () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const app = await buildServer({ databaseFile: join(workDir, "local.db"), logger: false });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/jobs",
+      payload: {
+        inputType: "place_id",
+        placeId: "ChIJVTPokywQkFQRmtVEaUZlJRA"
+      }
+    });
+
+    expect(response.statusCode).toBe(202);
+    const body = response.json();
+    expect(body.input).toMatchObject({
+      inputType: "place_id",
+      query: null,
+      location: null,
+      placeId: "ChIJVTPokywQkFQRmtVEaUZlJRA"
+    });
+
+    await app.close();
+  });
+
+  it("rejects unsupported maps urls", async () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const app = await buildServer({ databaseFile: join(workDir, "local.db"), logger: false });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/jobs",
+      payload: {
+        inputType: "maps_url",
+        mapsUrl: "https://www.google.com/maps/place/Space+Needle"
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toMatchObject({ error: "invalid_request" });
+
+    await app.close();
+  });
+
+  it("rejects ambiguous mixed-shape payloads", async () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const app = await buildServer({ databaseFile: join(workDir, "local.db"), logger: false });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/jobs",
+      payload: {
+        inputType: "keyword_location",
+        query: "coffee",
+        location: "seattle",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=coffee"
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toMatchObject({ error: "invalid_request" });
 
     await app.close();
   });

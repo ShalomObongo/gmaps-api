@@ -22,7 +22,9 @@ describe("job guardrails", () => {
       method: "POST",
       url: "/jobs",
       payload: {
-        query: "plumbers in nyc",
+        inputType: "keyword_location",
+        query: "plumbers",
+        location: "nyc",
         requestedFields: ["reviewAuthor"]
       }
     });
@@ -39,7 +41,9 @@ describe("job guardrails", () => {
       method: "POST",
       url: "/jobs",
       payload: {
-        query: "plumbers in nyc",
+        inputType: "keyword_location",
+        query: "plumbers",
+        location: "nyc",
         includeSensitiveFields: true,
         requestedFields: ["reviewAuthor"]
       }
