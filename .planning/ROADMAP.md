@@ -57,7 +57,10 @@ Plans:
   1. User can collect place results beyond the first visible viewport/page.
   2. User can set a depth or limit value that changes how far a run continues collecting.
   3. User receives a deduplicated place list even when scan areas overlap.
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 03-01-PLAN.md - Add typed, persisted collection depth controls so each run has durable coverage limits.
+- [ ] 03-02-PLAN.md - Implement bounded deep traversal and write-time deduplication for unique place outputs.
 
 ### Phase 4: Place Detail Extraction
 **Goal**: Users receive reliable structured place records with core identity/location data and available business details.
