@@ -9,11 +9,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Input & Jobs
 
-- [ ] **INPT-01**: User can submit a scrape job with keyword and location
-- [ ] **INPT-02**: User can submit a scrape job using Google Maps URL input
-- [ ] **INPT-03**: User can submit a scrape job using place ID input
-- [ ] **JOBS-01**: User can view job status lifecycle (queued, running, completed, failed)
-- [ ] **JOBS-02**: User can view run progress and basic metrics while a job executes
+- [x] **INPT-01**: User can submit a scrape job with keyword and location
+- [x] **INPT-02**: User can submit a scrape job using Google Maps URL input
+- [x] **INPT-03**: User can submit a scrape job using place ID input
+- [x] **JOBS-01**: User can view job status lifecycle (queued, running, completed, failed)
+- [x] **JOBS-02**: User can view run progress and basic metrics while a job executes
 
 ### Coverage & Deduplication
 
@@ -69,11 +69,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INPT-01 | Phase 2 | Pending |
-| INPT-02 | Phase 2 | Pending |
-| INPT-03 | Phase 2 | Pending |
-| JOBS-01 | Phase 2 | Pending |
-| JOBS-02 | Phase 2 | Pending |
+| INPT-01 | Phase 2 | Complete |
+| INPT-02 | Phase 2 | Complete |
+| INPT-03 | Phase 2 | Complete |
+| JOBS-01 | Phase 2 | Complete |
+| JOBS-02 | Phase 2 | Complete |
 | COVR-01 | Phase 3 | Pending |
 | COVR-02 | Phase 3 | Pending |
 | COVR-03 | Phase 3 | Pending |
@@ -94,4 +94,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-24*
-*Last updated: 2026-02-24 after roadmap mapping*
+*Last updated: 2026-02-25 after phase 2 completion*

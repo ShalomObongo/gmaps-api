@@ -5,32 +5,33 @@
 See: `.planning/PROJECT.md` (updated 2026-02-24)
 
 **Core value:** Given a search query and location scope, return reliable, structured Google Maps place data locally with no required paid services.
-**Current focus:** Phase 2 - Job Intake and Visibility
+**Current focus:** Phase 3 - Coverage and Deduplication
 
 ## Current Position
 
-Phase: 2 of 7 (Job Intake and Visibility)
+Phase: 3 of 7 (Coverage and Deduplication)
 Plan: 0 of TBD in current phase
 Status: Ready to plan
-Last activity: 2026-02-25 - Phase 1 verified and completed.
+Last activity: 2026-02-25 - Phase 2 verified and completed.
 
-Progress: [█░░░░░░░░░] 14%
+Progress: [███░░░░░░░] 29%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 25 min
-- Total execution time: 0.8 hours
+- Total plans completed: 4
+- Average duration: 24 min
+- Total execution time: 1.6 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 2 | 50 min | 25 min |
+| 2 | 2 | 48 min | 24 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (32 min), 01-02 (18 min)
+- Last 5 plans: 01-01 (32 min), 01-02 (18 min), 02-01 (20 min), 02-02 (28 min)
 - Trend: Stable
 
 ## Accumulated Context
@@ -46,6 +47,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Persist queued jobs in SQLite and return resolved policy at intake — Ensures async intake and transparent defaults for users
 - [Phase 01]: Enforce retry/backoff/pacing in runtime with explicit degraded-state warning signals — Satisfies RELY-01 reliability baseline with observable behavior
 - [Phase 01]: Reject sensitive field requests unless explicitly opted in and register API rate limiting at boot — Enforces SAFE-01 guardrail defaults in code
+- [Phase 02]: Normalize keyword/location, canonical maps URLs, and place IDs into one intake contract — Satisfies INPT-01/02/03 without branching runner logic
+- [Phase 02]: Persist lifecycle/progress metrics and expose polling job visibility endpoint — Satisfies JOBS-01/02 with durable state
 
 ### Pending Todos
 
@@ -59,6 +62,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-25 00:55
-Stopped at: Completed Phase 1 execution and verification.
+Last session: 2026-02-25 01:26
+Stopped at: Completed Phase 2 execution and verification.
 Resume file: None

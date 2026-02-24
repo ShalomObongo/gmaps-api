@@ -13,7 +13,7 @@ This roadmap delivers a local-first Google Maps scraping API from foundation con
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Local Runtime Safety Baseline** - Local execution works with guardrails and reliability defaults. (Completed 2026-02-25)
-- [ ] **Phase 2: Job Intake and Visibility** - Users can submit jobs through all v1 inputs and track them while running.
+- [x] **Phase 2: Job Intake and Visibility** - Users can submit jobs through all v1 inputs and track them while running. (Completed 2026-02-25)
 - [ ] **Phase 3: Coverage and Deduplication** - Runs go beyond first viewport and return unique places.
 - [ ] **Phase 4: Place Detail Extraction** - Place records include core and available business/contact fields.
 - [ ] **Phase 5: Reviews Collection Controls** - Runs can collect reviews with configurable ordering and caps.
@@ -46,8 +46,8 @@ Plans:
   4. User can view live progress and basic run metrics while the job is executing.
 **Plans**: 2 plans
 Plans:
-- [ ] 02-01-PLAN.md - Add typed multi-format intake normalization for keyword/location, maps URL, and place ID job submission.
-- [ ] 02-02-PLAN.md - Persist lifecycle/progress state and expose polling visibility for live job status metrics.
+- [x] 02-01-PLAN.md - Add typed multi-format intake normalization for keyword/location, maps URL, and place ID job submission.
+- [x] 02-02-PLAN.md - Persist lifecycle/progress state and expose polling visibility for live job status metrics.
 
 ### Phase 3: Coverage and Deduplication
 **Goal**: Users can collect deeper result sets and receive deduplicated places across overlapping scans.
@@ -106,7 +106,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Local Runtime Safety Baseline | 2/2 | Complete | 2026-02-25 |
-| 2. Job Intake and Visibility | 0/TBD | Not started | - |
+| 2. Job Intake and Visibility | 2/2 | Complete | 2026-02-25 |
 | 3. Coverage and Deduplication | 0/TBD | Not started | - |
 | 4. Place Detail Extraction | 0/TBD | Not started | - |
 | 5. Reviews Collection Controls | 0/TBD | Not started | - |
