@@ -34,3 +34,19 @@ export type JobRecord = {
   failedCount: number;
   failureReason: string | null;
 };
+
+export type PlaceCandidate = {
+  placeId: string | null;
+  name: string;
+  address: string | null;
+  mapsUrl: string | null;
+  lat: number | null;
+  lng: number | null;
+};
+
+export type PlaceRecord = PlaceCandidate & {
+  id: number;
+  jobId: string;
+  placeKey: string;
+  discoveredAt: string;
+};

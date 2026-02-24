@@ -38,6 +38,24 @@ export function createDatabase(filePath: string): DatabaseHandle {
   ensureColumn(db, "jobs", "failure_reason", "TEXT");
   ensureColumn(db, "jobs", "collection_config_json", "TEXT NOT NULL DEFAULT '{}'");
 
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS places (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      job_id TEXT NOT NULL,
+      place_key TEXT NOT NULL,
+      place_id TEXT,
+      name TEXT NOT NULL,
+      address TEXT,
+      maps_url TEXT,
+      lat REAL,
+      lng REAL,
+      discovered_at TEXT NOT NULL,
+      UNIQUE(job_id, place_key)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_places_job_id ON places(job_id);
+  `);
+
   return db;
 }
 
