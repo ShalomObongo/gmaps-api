@@ -6,10 +6,14 @@ import { createJobsRepo } from "./storage/jobs-repo.js";
 import { registerRateLimitPlugin } from "./api/plugins/rate-limit.js";
 import { registerJobRoutes } from "./api/routes/jobs.js";
 import { GUARDRAIL_NOTICE } from "./safety/guardrails.js";
+import { createJobsWorker, type WorkerExecuteJob } from "./orchestration/runner/jobs-worker.js";
 
 export type BuildServerOptions = {
   databaseFile?: string;
   logger?: boolean;
+  workerPollIntervalMs?: number;
+  workerHeartbeatIntervalMs?: number;
+  workerExecuteJob?: WorkerExecuteJob;
 };
 
 export async function buildServer(options: BuildServerOptions = {}): Promise<FastifyInstance> {
@@ -17,13 +21,21 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
   const app = Fastify({ logger: options.logger ?? true });
   const db = createDatabase(options.databaseFile ?? env.DATABASE_FILE);
   const jobsRepo = createJobsRepo(db);
+  const worker = createJobsWorker({
+    jobsRepo,
+    pollIntervalMs: options.workerPollIntervalMs,
+    heartbeatIntervalMs: options.workerHeartbeatIntervalMs,
+    executeJob: options.workerExecuteJob
+  });
 
   app.addHook("onClose", async () => {
+    await worker.stop();
     db.close();
   });
 
   await registerRateLimitPlugin(app);
   await registerJobRoutes(app, jobsRepo);
+  worker.start();
 
   app.get("/health", async () => ({ ok: true, notice: GUARDRAIL_NOTICE }));
 
