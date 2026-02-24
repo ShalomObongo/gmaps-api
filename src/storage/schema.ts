@@ -1,5 +1,11 @@
 export type JobStatus = "queued" | "running" | "completed" | "failed";
 
+export type CollectionConfig = {
+  maxPlaces: number;
+  maxScrollSteps: number;
+  maxViewportPans: number;
+};
+
 export type JobProgress = {
   discoveredCount: number;
   processedCount: number;
@@ -17,6 +23,7 @@ export type JobRecord = {
   location: string | null;
   status: JobStatus;
   policyJson: string;
+  collectionConfigJson: string;
   createdAt: string;
   startedAt: string | null;
   finishedAt: string | null;

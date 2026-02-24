@@ -20,7 +20,12 @@ describe("jobs repository lifecycle", () => {
     const db = createDatabase(join(workDir, "local.db"));
     const repo = createJobsRepo(db);
 
-    const created = repo.create({ query: "coffee", location: "seattle", policyJson: "{}" });
+    const created = repo.create({
+      query: "coffee",
+      location: "seattle",
+      policyJson: "{}",
+      collectionConfigJson: '{"maxPlaces":50,"maxScrollSteps":20,"maxViewportPans":0}'
+    });
     const claimed = repo.claimNextQueued("2026-02-25T01:00:00.000Z");
     expect(claimed?.id).toBe(created.id);
     expect(claimed?.status).toBe("running");
@@ -61,7 +66,11 @@ describe("jobs repository lifecycle", () => {
     const db = createDatabase(join(workDir, "local.db"));
     const repo = createJobsRepo(db);
 
-    const job = repo.create({ query: "pizza", policyJson: "{}" });
+    const job = repo.create({
+      query: "pizza",
+      policyJson: "{}",
+      collectionConfigJson: '{"maxPlaces":25,"maxScrollSteps":10,"maxViewportPans":0}'
+    });
 
     expect(() => repo.markCompleted(job.id)).toThrow("job must be running before completion");
     expect(() => repo.updateProgress(job.id, { processedCount: 1 })).toThrow(
@@ -81,14 +90,48 @@ describe("jobs repository lifecycle", () => {
     const db = createDatabase(join(workDir, "local.db"));
     const repo = createJobsRepo(db);
 
-    const first = repo.create({ query: "first", policyJson: "{}" });
-    const second = repo.create({ query: "second", policyJson: "{}" });
+    const first = repo.create({
+      query: "first",
+      policyJson: "{}",
+      collectionConfigJson: '{"maxPlaces":15,"maxScrollSteps":8,"maxViewportPans":0}'
+    });
+    const second = repo.create({
+      query: "second",
+      policyJson: "{}",
+      collectionConfigJson: '{"maxPlaces":35,"maxScrollSteps":12,"maxViewportPans":1}'
+    });
 
     const claimedFirst = repo.claimNextQueued();
     const claimedSecond = repo.claimNextQueued();
 
     expect(claimedFirst?.id).toBe(first.id);
     expect(claimedSecond?.id).toBe(second.id);
+
+    db.close();
+  });
+
+  it("stores collection config per job without cross-job leakage", () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const db = createDatabase(join(workDir, "local.db"));
+    const repo = createJobsRepo(db);
+
+    const low = repo.create({
+      query: "coffee",
+      policyJson: "{}",
+      collectionConfigJson: '{"maxPlaces":10,"maxScrollSteps":4,"maxViewportPans":0}'
+    });
+    const high = repo.create({
+      query: "coffee",
+      policyJson: "{}",
+      collectionConfigJson: '{"maxPlaces":120,"maxScrollSteps":40,"maxViewportPans":3}'
+    });
+
+    expect(repo.getById(low.id)?.collectionConfigJson).toBe(
+      '{"maxPlaces":10,"maxScrollSteps":4,"maxViewportPans":0}'
+    );
+    expect(repo.getById(high.id)?.collectionConfigJson).toBe(
+      '{"maxPlaces":120,"maxScrollSteps":40,"maxViewportPans":3}'
+    );
 
     db.close();
   });

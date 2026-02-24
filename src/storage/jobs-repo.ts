@@ -7,6 +7,7 @@ export type CreateJobInput = {
   location?: string;
   status?: JobStatus;
   policyJson: string;
+  collectionConfigJson: string;
 };
 
 export type JobsRepo = {
@@ -49,6 +50,7 @@ export function createJobsRepo(db: DatabaseHandle): JobsRepo {
       location,
       status,
       policy_json,
+      collection_config_json,
       created_at,
       started_at,
       finished_at,
@@ -65,6 +67,7 @@ export function createJobsRepo(db: DatabaseHandle): JobsRepo {
       @location,
       @status,
       @policyJson,
+      @collectionConfigJson,
       @createdAt,
       @startedAt,
       @finishedAt,
@@ -143,6 +146,7 @@ export function createJobsRepo(db: DatabaseHandle): JobsRepo {
         location: input.location ?? null,
         status: input.status ?? "queued",
         policyJson: input.policyJson,
+        collectionConfigJson: input.collectionConfigJson,
         createdAt: now,
         startedAt: null,
         finishedAt: null,
@@ -268,6 +272,7 @@ function selectByIdSql(): string {
       location,
       status,
       policy_json AS policyJson,
+      collection_config_json AS collectionConfigJson,
       created_at AS createdAt,
       started_at AS startedAt,
       finished_at AS finishedAt,

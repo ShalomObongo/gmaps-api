@@ -70,7 +70,8 @@ export async function registerJobRoutes(app: FastifyInstance, jobsRepo: JobsRepo
         query: normalizedTarget.query ?? `place_id:${normalizedTarget.placeId}`,
         location: normalizedTarget.location ?? undefined,
         status: "queued",
-        policyJson: JSON.stringify(policy)
+        policyJson: JSON.stringify(policy),
+        collectionConfigJson: JSON.stringify(normalizedTarget.collection)
       });
 
       return reply.code(202).send({

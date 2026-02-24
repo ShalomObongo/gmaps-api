@@ -15,6 +15,7 @@ export function createDatabase(filePath: string): DatabaseHandle {
       location TEXT,
       status TEXT NOT NULL,
       policy_json TEXT NOT NULL,
+      collection_config_json TEXT NOT NULL DEFAULT '{}',
       created_at TEXT NOT NULL,
       started_at TEXT,
       finished_at TEXT,
@@ -35,6 +36,7 @@ export function createDatabase(filePath: string): DatabaseHandle {
   ensureColumn(db, "jobs", "processed_count", "INTEGER NOT NULL DEFAULT 0");
   ensureColumn(db, "jobs", "failed_count", "INTEGER NOT NULL DEFAULT 0");
   ensureColumn(db, "jobs", "failure_reason", "TEXT");
+  ensureColumn(db, "jobs", "collection_config_json", "TEXT NOT NULL DEFAULT '{}'");
 
   return db;
 }
