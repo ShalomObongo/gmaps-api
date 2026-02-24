@@ -45,6 +45,9 @@ export type PlaceCandidate = {
   mapsUrl: string | null;
   lat: number | null;
   lng: number | null;
+  website: string | null;
+  phone: string | null;
+  openingHoursJson: string | null;
 };
 
 export type PlaceRecord = PlaceCandidate & {

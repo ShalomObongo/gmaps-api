@@ -10,7 +10,10 @@ export const PlaceRecordSchema = z.strictObject({
   address: z.string().nullable(),
   mapsUrl: z.string().nullable(),
   lat: z.number().nullable(),
-  lng: z.number().nullable()
+  lng: z.number().nullable(),
+  website: z.string().nullable(),
+  phone: z.string().nullable(),
+  openingHoursJson: z.string().nullable()
 });
 
 export type NormalizePlaceRecordInput = {
@@ -23,6 +26,9 @@ export type NormalizePlaceRecordInput = {
   mapsUrl?: unknown;
   lat?: unknown;
   lng?: unknown;
+  website?: unknown;
+  phone?: unknown;
+  openingHoursJson?: unknown;
 };
 
 export function normalizePlaceRecord(input: NormalizePlaceRecordInput): PlaceCandidate {
@@ -35,7 +41,10 @@ export function normalizePlaceRecord(input: NormalizePlaceRecordInput): PlaceCan
     address: normalizeNullableText(input.address),
     mapsUrl: normalizeNullableText(input.mapsUrl),
     lat: normalizeNullableNumber(input.lat),
-    lng: normalizeNullableNumber(input.lng)
+    lng: normalizeNullableNumber(input.lng),
+    website: normalizeNullableText(input.website),
+    phone: normalizeNullableText(input.phone),
+    openingHoursJson: normalizeNullableText(input.openingHoursJson)
   });
 }
 

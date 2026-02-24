@@ -12,7 +12,10 @@ describe("normalizePlaceRecord", () => {
       address: "123 Main St",
       mapsUrl: "https://maps.google.com/?cid=1",
       lat: "47.6097",
-      lng: -122.3331
+      lng: -122.3331,
+      website: "https://cafe-one.example",
+      phone: "+1 206 555 0101",
+      openingHoursJson: '["Mon 9-5"]'
     });
 
     expect(normalized).toEqual({
@@ -24,7 +27,10 @@ describe("normalizePlaceRecord", () => {
       address: "123 Main St",
       mapsUrl: "https://maps.google.com/?cid=1",
       lat: 47.6097,
-      lng: -122.3331
+      lng: -122.3331,
+      website: "https://cafe-one.example",
+      phone: "+1 206 555 0101",
+      openingHoursJson: '["Mon 9-5"]'
     });
   });
 
@@ -38,7 +44,10 @@ describe("normalizePlaceRecord", () => {
       address: undefined,
       mapsUrl: "",
       lat: "north",
-      lng: undefined
+      lng: undefined,
+      website: undefined,
+      phone: "",
+      openingHoursJson: null
     });
 
     expect(normalized).toEqual({
@@ -50,7 +59,10 @@ describe("normalizePlaceRecord", () => {
       address: null,
       mapsUrl: null,
       lat: null,
-      lng: null
+      lng: null,
+      website: null,
+      phone: null,
+      openingHoursJson: null
     });
   });
 
