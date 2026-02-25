@@ -119,4 +119,76 @@ describe("place reviews repository", () => {
 
     db.close();
   });
+
+  it("lists reviews by job with deterministic place and position ordering", () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const db = createDatabase(join(workDir, "local.db"));
+    const repo = createPlaceReviewsRepo(db);
+
+    repo.insertMany({
+      jobId: "job-scope",
+      placeKey: "place-b",
+      reviews: [
+        {
+          reviewId: "scope-b2",
+          sortOrder: "newest",
+          position: 2,
+          authorName: null,
+          rating: null,
+          text: null,
+          publishedAt: null
+        },
+        {
+          reviewId: "scope-b1",
+          sortOrder: "newest",
+          position: 1,
+          authorName: null,
+          rating: null,
+          text: null,
+          publishedAt: null
+        }
+      ]
+    });
+
+    repo.insertMany({
+      jobId: "job-scope",
+      placeKey: "place-a",
+      reviews: [
+        {
+          reviewId: "scope-a1",
+          sortOrder: "newest",
+          position: 1,
+          authorName: null,
+          rating: null,
+          text: null,
+          publishedAt: null
+        }
+      ]
+    });
+
+    repo.insertMany({
+      jobId: "job-other",
+      placeKey: "place-a",
+      reviews: [
+        {
+          reviewId: "other-a1",
+          sortOrder: "newest",
+          position: 1,
+          authorName: null,
+          rating: null,
+          text: null,
+          publishedAt: null
+        }
+      ]
+    });
+
+    expect(repo.listByJob("job-scope").map((review) => review.reviewId)).toEqual([
+      "scope-a1",
+      "scope-b1",
+      "scope-b2"
+    ]);
+    expect(repo.listByJob("job-scope").every((review) => review.jobId === "job-scope")).toBe(true);
+
+    db.close();
+  });
 });

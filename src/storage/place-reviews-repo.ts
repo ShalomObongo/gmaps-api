@@ -10,6 +10,7 @@ export type InsertPlaceReviewsInput = {
 
 export type PlaceReviewsRepo = {
   insertMany(input: InsertPlaceReviewsInput): number;
+  listByJob(jobId: string): PlaceReviewRecord[];
   listByJobAndPlace(jobId: string, placeKey: string): PlaceReviewRecord[];
 };
 
@@ -61,6 +62,24 @@ export function createPlaceReviewsRepo(db: DatabaseHandle): PlaceReviewsRepo {
     ORDER BY position ASC, id ASC
   `);
 
+  const listByJob = db.prepare(`
+    SELECT
+      id,
+      job_id AS jobId,
+      place_key AS placeKey,
+      review_id AS reviewId,
+      sort_order AS sortOrder,
+      position,
+      author_name AS authorName,
+      rating,
+      text,
+      published_at AS publishedAt,
+      collected_at AS collectedAt
+    FROM place_reviews
+    WHERE job_id = ?
+    ORDER BY place_key ASC, position ASC, id ASC
+  `);
+
   return {
     insertMany({ jobId, placeKey, reviews, collectedAt = new Date().toISOString() }) {
       if (reviews.length === 0) {
@@ -93,6 +112,9 @@ export function createPlaceReviewsRepo(db: DatabaseHandle): PlaceReviewsRepo {
     },
     listByJobAndPlace(jobId, placeKey) {
       return listByJobAndPlace.all(jobId, placeKey) as PlaceReviewRecord[];
+    },
+    listByJob(jobId) {
+      return listByJob.all(jobId) as PlaceReviewRecord[];
     }
   };
 }
