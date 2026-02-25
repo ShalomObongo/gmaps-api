@@ -230,9 +230,9 @@ async function executeCollectorJob(input: ExecuteCollectorJobInput): Promise<Wor
     const details = await input.enrichCandidate(normalizedCore, input.job);
     const enrichedCandidate: PlaceCandidate = {
       ...normalizedCore,
-      website: details.website,
-      phone: details.phone,
-      openingHoursJson: details.openingHoursJson
+      website: details.website ?? normalizedCore.website,
+      phone: details.phone ?? normalizedCore.phone,
+      openingHoursJson: details.openingHoursJson ?? normalizedCore.openingHoursJson
     };
 
     const inserted = input.placesRepo.insert({

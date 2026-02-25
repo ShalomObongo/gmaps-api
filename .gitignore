@@ -2,3 +2,6 @@ node_modules/
 dist/
 /storage/
 *.log
+downloads/
+
+.DS_Store

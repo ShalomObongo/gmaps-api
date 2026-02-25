@@ -18,6 +18,7 @@ type RawCandidate = {
   rating: number | null;
   reviewsCount: number | null;
   address: string | null;
+  phone: string | null;
 };
 
 const sessions = new Map<string, LiveDiscoverySession>();
@@ -64,7 +65,7 @@ export async function discoverPlacesLive(step: CollectStep, job: JobRecord): Pro
       lat: latLng?.lat ?? null,
       lng: latLng?.lng ?? null,
       website: null,
-      phone: null,
+      phone: candidate.phone,
       openingHoursJson: null
     });
   }
@@ -100,7 +101,7 @@ async function getOrCreateSession(job: JobRecord): Promise<LiveDiscoverySession>
   const page = await context.newPage();
 
   const query = buildMapsQuery(job);
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&hl=en&query=${encodeURIComponent(query)}`;
   await page.goto(mapsUrl, { waitUntil: "domcontentloaded", timeout: 60_000 });
   await dismissConsent(page);
   await page.waitForSelector('div[role="feed"], a[href*="/maps/place/"]', {
@@ -198,16 +199,66 @@ async function extractVisibleCandidates(page: Page): Promise<RawCandidate[]> {
       return normalized.length > 0 ? normalized : null;
     };
 
-    const parseRatingAndReviews = (article: Element): { rating: number | null; reviewsCount: number | null } => {
-      const label =
-        article.querySelector('[role="img"][aria-label*="star"]')?.getAttribute("aria-label") ??
-        article.querySelector("span[aria-label*='star']")?.getAttribute("aria-label") ??
-        "";
-      const ratingMatch = label.match(/([0-9]+(?:\.[0-9]+)?)/);
-      const reviewsMatch = label.match(/\(([\d,]+)\)/);
+    const parseRatingAndReviews = (lines: string[]): { rating: number | null; reviewsCount: number | null } => {
+      for (const line of lines) {
+        const ratingAndCount = line.match(/\b([0-5](?:[.,][0-9])?)\b(?:\s*\(?\s*([\d,]{1,7})\s*\)?)?/);
+        if (!ratingAndCount?.[1]) {
+          continue;
+        }
+
+        const ratingParsed = Number.parseFloat(ratingAndCount[1].replace(",", "."));
+        if (!Number.isFinite(ratingParsed) || ratingParsed < 0 || ratingParsed > 5) {
+          continue;
+        }
+
+        const reviewsParsed = ratingAndCount[2]
+          ? Number.parseInt(ratingAndCount[2].replace(/,/g, ""), 10)
+          : Number.NaN;
+        return {
+          rating: ratingParsed,
+          reviewsCount: Number.isFinite(reviewsParsed) ? reviewsParsed : null
+        };
+      }
+
       return {
-        rating: ratingMatch ? Number.parseFloat(ratingMatch[1]) : null,
-        reviewsCount: reviewsMatch ? Number.parseInt(reviewsMatch[1].replace(/,/g, ""), 10) : null
+        rating: null,
+        reviewsCount: null
+      };
+    };
+
+    const isNoiseToken = (value: string): boolean => /^[^\p{L}\p{N}]+$/u.test(value);
+    const parsePhone = (lines: string[]): string | null => {
+      for (const line of lines) {
+        const match = line.match(/(\+?\d[\d\s-]{5,}\d)/);
+        if (match?.[1]) {
+          return normalizeText(match[1]);
+        }
+      }
+      return null;
+    };
+
+    const parseCategoryAndAddress = (lines: string[]): { category: string | null; address: string | null } => {
+      const metadataLine = lines.find((line) => line.includes("·"));
+      if (!metadataLine) {
+        return { category: null, address: null };
+      }
+
+      const parts = metadataLine
+        .split("·")
+        .map((part) => normalizeText(part))
+        .filter((part): part is string => part !== null)
+        .filter((part) => !isNoiseToken(part))
+        .filter((part) => !/^(open|closed|opens?|closes?|sponsored)$/i.test(part));
+
+      if (parts.length === 0) {
+        return { category: null, address: null };
+      }
+
+      const category = parts[0] ?? null;
+      const address = parts.length > 1 ? parts[parts.length - 1] : null;
+      return {
+        category,
+        address: address === category ? null : address
       };
     };
 
@@ -218,16 +269,20 @@ async function extractVisibleCandidates(page: Page): Promise<RawCandidate[]> {
       const link = article.querySelector('a[href*="/maps/place/"]') as HTMLAnchorElement | null;
       const nameFromHeadline = normalizeText(article.querySelector("div.fontHeadlineSmall")?.textContent);
       const nameFromAria = normalizeText(link?.getAttribute("aria-label"));
-      const name = nameFromHeadline ?? nameFromAria;
+      const name = (nameFromHeadline ?? nameFromAria)?.replace(/^Sponsored\s+|^Limedhaminiwa\s+/i, "") ?? null;
       if (!name) {
         continue;
       }
 
-      const detail = normalizeText(article.textContent);
-      const parts = detail?.split(" · ") ?? [];
-      const category = parts.length > 1 ? normalizeText(parts[1]) : null;
-      const address = parts.length > 2 ? normalizeText(parts[2]) : null;
-      const { rating, reviewsCount } = parseRatingAndReviews(article);
+      const rawInnerText =
+        article instanceof HTMLElement ? article.innerText : (article.textContent ?? "");
+      const lines = rawInnerText
+        .split("\n")
+        .map((line) => normalizeText(line))
+        .filter((line): line is string => line !== null);
+      const { category, address } = parseCategoryAndAddress(lines);
+      const { rating, reviewsCount } = parseRatingAndReviews(lines);
+      const phone = parsePhone(lines);
 
       candidates.push({
         name,
@@ -235,7 +290,8 @@ async function extractVisibleCandidates(page: Page): Promise<RawCandidate[]> {
         category,
         rating,
         reviewsCount,
-        address
+        address,
+        phone
       });
     }
 
