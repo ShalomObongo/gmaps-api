@@ -8,6 +8,7 @@ import { createPlaceReviewsRepo } from "./storage/place-reviews-repo.js";
 import { registerRateLimitPlugin } from "./api/plugins/rate-limit.js";
 import { registerJobRoutes } from "./api/routes/jobs.js";
 import { registerJobStatusRoutes } from "./api/routes/job-status.js";
+import { registerJobResultsRoutes } from "./api/routes/job-results.js";
 import { GUARDRAIL_NOTICE } from "./safety/guardrails.js";
 import { createJobsWorker, type WorkerExecuteJob } from "./orchestration/runner/jobs-worker.js";
 
@@ -43,6 +44,7 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
   await registerRateLimitPlugin(app);
   await registerJobRoutes(app, jobsRepo);
   await registerJobStatusRoutes(app, jobsRepo);
+  await registerJobResultsRoutes(app, jobsRepo, placesRepo, placeReviewsRepo);
   worker.start();
 
   app.get("/health", async () => ({ ok: true, notice: GUARDRAIL_NOTICE }));

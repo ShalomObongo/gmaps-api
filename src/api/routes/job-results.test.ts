@@ -3,6 +3,7 @@ import Fastify, { type FastifyInstance } from "fastify";
 import { mkdtempSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { buildServer } from "../../server.js";
 import { createDatabase, type DatabaseHandle } from "../../storage/db.js";
 import { createJobsRepo, type JobsRepo } from "../../storage/jobs-repo.js";
 import { createPlacesRepo, type PlacesRepo } from "../../storage/places-repo.js";
@@ -234,6 +235,45 @@ describe("GET /jobs/:id/results", () => {
     expect(body.results.places[1].reviews.map((review: { reviewId: string }) => review.reviewId)).toEqual([
       "beta-1"
     ]);
+  });
+
+  it("is available from the assembled server alongside job status route", async () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const app = await buildServer({
+      databaseFile: join(workDir, "local.db"),
+      logger: false,
+      workerPollIntervalMs: 60_000,
+      workerHeartbeatIntervalMs: 60_000
+    });
+
+    const createResponse = await app.inject({
+      method: "POST",
+      url: "/jobs",
+      payload: {
+        inputType: "keyword_location",
+        query: "coffee",
+        location: "seattle",
+        collection: {
+          maxPlaces: 10
+        }
+      }
+    });
+    const jobId = createResponse.json().jobId as string;
+
+    const statusResponse = await app.inject({ method: "GET", url: `/jobs/${jobId}` });
+    const resultsResponse = await app.inject({ method: "GET", url: `/jobs/${jobId}/results` });
+
+    expect(statusResponse.statusCode).toBe(200);
+    expect(statusResponse.json()).toMatchObject({ jobId, status: "queued" });
+
+    expect(resultsResponse.statusCode).toBe(409);
+    expect(resultsResponse.json()).toMatchObject({
+      error: "results_not_ready",
+      jobId,
+      status: "queued"
+    });
+
+    await app.close();
   });
 
   async function createTestApp(): Promise<{
