@@ -96,7 +96,9 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. User can fetch structured results for a completed job through API endpoints.
   2. User receives clear API response behavior for in-progress, completed, and failed jobs.
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 06-01-PLAN.md - Add a state-gated job results endpoint that returns structured completed output with explicit non-ready behavior.
 
 ### Phase 7: JSON and CSV Exports
 **Goal**: Users can export job outputs into common developer-friendly file formats.
