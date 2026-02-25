@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Local Runtime Safety Baseline** - Local execution works with guardrails and reliability defaults. (Completed 2026-02-25)
 - [x] **Phase 2: Job Intake and Visibility** - Users can submit jobs through all v1 inputs and track them while running. (Completed 2026-02-25)
 - [x] **Phase 3: Coverage and Deduplication** - Runs go beyond first viewport and return unique places. (Completed 2026-02-25)
-- [ ] **Phase 4: Place Detail Extraction** - Place records include core and available business/contact fields.
+- [x] **Phase 4: Place Detail Extraction** - Place records include core and available business/contact fields. (completed 2026-02-25)
 - [x] **Phase 5: Reviews Collection Controls** - Runs can collect reviews with configurable ordering and caps. (Completed 2026-02-25)
 - [ ] **Phase 6: Results API Access** - Completed run data is retrievable through structured API endpoints.
 - [ ] **Phase 7: JSON and CSV Exports** - Users can export run outputs in standard scraper-friendly formats.
@@ -118,7 +118,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 1. Local Runtime Safety Baseline | 2/2 | Complete | 2026-02-25 |
 | 2. Job Intake and Visibility | 2/2 | Complete | 2026-02-25 |
 | 3. Coverage and Deduplication | 3/3 | Complete | 2026-02-25 |
-| 4. Place Detail Extraction | 0/TBD | Not started | - |
+| 4. Place Detail Extraction | 2/2 | Complete   | 2026-02-25 |
 | 5. Reviews Collection Controls | 2/2 | Complete | 2026-02-25 |
 | 6. Results API Access | 0/TBD | Not started | - |
 | 7. JSON and CSV Exports | 0/TBD | Not started | - |
