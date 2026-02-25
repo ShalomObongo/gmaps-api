@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { JobsRepo } from "../../storage/jobs-repo.js";
 import type { PlaceReviewsRepo } from "../../storage/place-reviews-repo.js";
 import type { PlacesRepo } from "../../storage/places-repo.js";
+import { buildJobResultsModel } from "../../output/build-job-results-model.js";
 
 export async function registerJobResultsRoutes(
   app: FastifyInstance,
@@ -146,83 +147,30 @@ export async function registerJobResultsRoutes(
     },
     async (request, reply) => {
       const params = request.params as { id: string };
-      const job = jobsRepo.getById(params.id);
+      const result = buildJobResultsModel(params.id, {
+        jobsRepo,
+        placesRepo,
+        placeReviewsRepo
+      });
 
-      if (!job) {
+      if (result.kind === "not_found") {
         return reply.code(404).send({
           error: "not_found",
           message: `job not found: ${params.id}`
         });
       }
 
-      if (job.status !== "completed") {
+      if (result.kind === "not_ready") {
         return reply.code(409).send({
           error: "results_not_ready",
-          jobId: job.id,
-          status: job.status,
+          jobId: result.job.id,
+          status: result.job.status,
           message: "results are available only for completed jobs",
-          failureReason: job.failureReason
+          failureReason: result.job.failureReason
         });
       }
 
-      const places = placesRepo.listByJob(job.id);
-      const reviews = placeReviewsRepo.listByJob(job.id);
-      const reviewsByPlace = new Map<string, typeof reviews>();
-      for (const review of reviews) {
-        const existing = reviewsByPlace.get(review.placeKey);
-        if (existing) {
-          existing.push(review);
-        } else {
-          reviewsByPlace.set(review.placeKey, [review]);
-        }
-      }
-
-      return {
-        jobId: job.id,
-        status: job.status,
-        timestamps: {
-          createdAt: job.createdAt,
-          startedAt: job.startedAt,
-          finishedAt: job.finishedAt,
-          failedAt: job.failedAt,
-          lastHeartbeatAt: job.lastHeartbeatAt
-        },
-        progress: {
-          discoveredCount: job.discoveredCount,
-          processedCount: job.processedCount,
-          uniqueAcceptedCount: job.processedCount,
-          failedCount: job.failedCount,
-          failureReason: job.failureReason
-        },
-        results: {
-          places: places.map((place) => ({
-            placeKey: place.placeKey,
-            placeId: place.placeId,
-            name: place.name,
-            category: place.category,
-            rating: place.rating,
-            reviewsCount: place.reviewsCount,
-            address: place.address,
-            mapsUrl: place.mapsUrl,
-            lat: place.lat,
-            lng: place.lng,
-            website: place.website,
-            phone: place.phone,
-            openingHoursJson: place.openingHoursJson,
-            discoveredAt: place.discoveredAt,
-            reviews: (reviewsByPlace.get(place.placeKey) ?? []).map((review) => ({
-              reviewId: review.reviewId,
-              sortOrder: review.sortOrder,
-              position: review.position,
-              authorName: review.authorName,
-              rating: review.rating,
-              text: review.text,
-              publishedAt: review.publishedAt,
-              collectedAt: review.collectedAt
-            }))
-          }))
-        }
-      };
+      return result.model;
     }
   );
 }
