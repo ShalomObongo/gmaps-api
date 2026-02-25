@@ -73,8 +73,8 @@ Plans:
   3. User receives consistently structured place objects across all records in a run.
 **Plans**: 2 plans
 Plans:
-- [ ] 04-01-PLAN.md - Establish strict normalized core place detail contract and migration-safe persistence for DATA-01.
-- [ ] 04-02-PLAN.md - Add best-effort contact/business detail extraction and worker wiring for DATA-02.
+- [x] 04-01-PLAN.md - Establish strict normalized core place detail contract and migration-safe persistence for DATA-01.
+- [x] 04-02-PLAN.md - Add best-effort contact/business detail extraction and worker wiring for DATA-02.
 
 ### Phase 5: Reviews Collection Controls
 **Goal**: Users can extract review data with explicit control over ordering and collection size.
