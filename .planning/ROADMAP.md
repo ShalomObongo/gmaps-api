@@ -84,7 +84,10 @@ Plans:
   1. User can request review extraction for a run and receive review records in output.
   2. User can choose review sort order and observe output ordering match the selection.
   3. User can set a review cap and output respects the configured maximum.
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 05-01-PLAN.md - Add strict review controls to job intake and persist resolved review config per queued job.
+- [ ] 05-02-PLAN.md - Implement ordered capped review extraction and worker persistence through normalized place_reviews storage.
 
 ### Phase 6: Results API Access
 **Goal**: Users can retrieve structured results for completed jobs directly from API endpoints.

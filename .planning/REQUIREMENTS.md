@@ -25,7 +25,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **DATA-01**: User receives core place fields (name, category, rating, reviews count, address, coordinates)
 - [x] **DATA-02**: User receives contact and business fields when available (website, phone, opening hours)
-- [ ] **DATA-03**: User can extract place reviews with configurable sort order and cap
+- [x] **DATA-03**: User can extract place reviews with configurable sort order and cap
 
 ### Reliability & Safety
 
@@ -79,7 +79,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COVR-03 | Phase 3 | Complete |
 | DATA-01 | Phase 4 | Complete |
 | DATA-02 | Phase 4 | Complete |
-| DATA-03 | Phase 5 | Pending |
+| DATA-03 | Phase 5 | Complete |
 | RELY-01 | Phase 1 | Complete |
 | RELY-02 | Phase 1 | Complete |
 | SAFE-01 | Phase 1 | Complete |

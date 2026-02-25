@@ -39,6 +39,7 @@ Progress: [████░░░░░░] 43%
 | Phase 03 P03 | 10 min | 2 tasks | 5 files |
 | Phase 04 P01 | 8min | 2 tasks | 6 files |
 | Phase 04 P02 | 10min | 2 tasks | 8 files |
+| Phase 05 P01 | 4min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,8 @@ Recent decisions affecting current work:
 - [Phase 04]: SQLite place detail columns are added in place with ensureColumn for backward-compatible local DB upgrades.
 - [Phase 04]: Opening hours are stored as canonical JSON text in openingHoursJson for v1 detail extraction.
 - [Phase 04]: Worker enrichment remains best-effort with nullable contact outputs to avoid run-level failures.
+- [Phase 05]: Review controls are persisted as JSON per job to keep migration changes additive and worker-friendly.
+- [Phase 05]: Review intake defaults are explicit (enabled=false, sort='newest', maxReviews=0) for deterministic downstream behavior.
 
 ### Pending Todos
 
