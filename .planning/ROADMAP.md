@@ -108,9 +108,10 @@ Plans:
   1. User can export a job result set as JSON.
   2. User can export the same job result set as CSV.
   3. Exported files are structured for immediate use in common scraper/data workflows.
-**Plans**: 1 plan
+**Plans**: 2 plans
 Plans:
-- [ ] 07-01-PLAN.md - Add shared completed-job export model and downloadable JSON/CSV route contracts with attachment semantics.
+- [x] 07-01-PLAN.md - Extract shared completed-job output builder and refactor results route to use one source of truth.
+- [ ] 07-02-PLAN.md - Implement JSON/CSV export endpoint, CSV serializer, and server registration with attachment semantics.
 
 ## Progress
 
@@ -125,4 +126,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 4. Place Detail Extraction | 2/2 | Complete   | 2026-02-25 |
 | 5. Reviews Collection Controls | 2/2 | Complete | 2026-02-25 |
 | 6. Results API Access | 1/1 | Complete | 2026-02-25 |
-| 7. JSON and CSV Exports | 0/1 | Not started | - |
+| 7. JSON and CSV Exports | 1/2 | In Progress | - |

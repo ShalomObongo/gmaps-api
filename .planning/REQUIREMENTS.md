@@ -36,7 +36,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Output
 
 - [x] **OUTP-01**: User can fetch structured job results through API endpoints
-- [ ] **OUTP-02**: User can export results as JSON
+- [x] **OUTP-02**: User can export results as JSON
 - [ ] **OUTP-03**: User can export results as CSV
 
 ## v2 Requirements
@@ -84,7 +84,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RELY-02 | Phase 1 | Complete |
 | SAFE-01 | Phase 1 | Complete |
 | OUTP-01 | Phase 6 | Complete |
-| OUTP-02 | Phase 7 | Pending |
+| OUTP-02 | Phase 7 | Complete |
 | OUTP-03 | Phase 7 | Pending |
 
 **Coverage:**

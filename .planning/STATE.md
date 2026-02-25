@@ -10,16 +10,16 @@ See: `.planning/PROJECT.md` (updated 2026-02-24)
 ## Current Position
 
 Phase: 7 of 7 (JSON and CSV Exports)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-02-25 - Phase 6 verified and completed.
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-25 - Completed 07-01 shared output builder and results route refactor.
 
-Progress: [█████████░] 86%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 12
 - Average duration: 19 min
 - Total execution time: 2.2 hours
 
@@ -42,6 +42,7 @@ Progress: [█████████░] 86%
 | Phase 05 P01 | 4min | 2 tasks | 8 files |
 | Phase 05 P02 | 5min | 3 tasks | 9 files |
 | Phase 06 P01 | 4min | 3 tasks | 5 files |
+| Phase 07 P01 | 1 min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,8 @@ Recent decisions affecting current work:
 - [Phase 05]: Worker review extraction remains best-effort per place and never fails whole job completion when review reads error.
 - [Phase 06]: Use 409 results_not_ready for queued/running/failed jobs and reserve 200 for completed jobs only.
 - [Phase 06]: Read all reviews with one ordered listByJob query and group in memory by placeKey.
+- [Phase 07]: Introduced buildJobResultsModel as the single source of truth for completed-job output assembly so results and exports can share state-gated reads. — Prevents response contract drift between /jobs/:id/results and export routes.
+- [Phase 07]: Kept uniqueAcceptedCount mapped to processedCount while centralizing model shaping. — Maintains Phase 6 API semantics during refactor.
 
 ### Pending Todos
 
@@ -87,6 +90,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-25 00:34
-Stopped at: Completed 06-01-PLAN.md
+Last session: 2026-02-25 04:03
+Stopped at: Completed 07-01-PLAN.md
 Resume file: None
