@@ -118,12 +118,14 @@ describe("jobs repository lifecycle", () => {
     const low = repo.create({
       query: "coffee",
       policyJson: "{}",
-      collectionConfigJson: '{"maxPlaces":10,"maxScrollSteps":4,"maxViewportPans":0}'
+      collectionConfigJson: '{"maxPlaces":10,"maxScrollSteps":4,"maxViewportPans":0}',
+      reviewConfigJson: '{"enabled":true,"sort":"newest","maxReviews":5}'
     });
     const high = repo.create({
       query: "coffee",
       policyJson: "{}",
-      collectionConfigJson: '{"maxPlaces":120,"maxScrollSteps":40,"maxViewportPans":3}'
+      collectionConfigJson: '{"maxPlaces":120,"maxScrollSteps":40,"maxViewportPans":3}',
+      reviewConfigJson: '{"enabled":true,"sort":"lowest_rating","maxReviews":2}'
     });
 
     expect(repo.getById(low.id)?.collectionConfigJson).toBe(
@@ -131,6 +133,30 @@ describe("jobs repository lifecycle", () => {
     );
     expect(repo.getById(high.id)?.collectionConfigJson).toBe(
       '{"maxPlaces":120,"maxScrollSteps":40,"maxViewportPans":3}'
+    );
+    expect(repo.getById(low.id)?.reviewConfigJson).toBe(
+      '{"enabled":true,"sort":"newest","maxReviews":5}'
+    );
+    expect(repo.getById(high.id)?.reviewConfigJson).toBe(
+      '{"enabled":true,"sort":"lowest_rating","maxReviews":2}'
+    );
+
+    db.close();
+  });
+
+  it("hydrates deterministic review controls when omitted", () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const db = createDatabase(join(workDir, "local.db"));
+    const repo = createJobsRepo(db);
+
+    const job = repo.create({
+      query: "bakery",
+      policyJson: "{}",
+      collectionConfigJson: '{"maxPlaces":12,"maxScrollSteps":4,"maxViewportPans":0}'
+    });
+
+    expect(repo.getById(job.id)?.reviewConfigJson).toBe(
+      '{"enabled":false,"sort":"newest","maxReviews":0}'
     );
 
     db.close();

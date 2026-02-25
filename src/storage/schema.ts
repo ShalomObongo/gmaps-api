@@ -6,6 +6,14 @@ export type CollectionConfig = {
   maxViewportPans: number;
 };
 
+export type ReviewSort = "newest" | "most_relevant" | "highest_rating" | "lowest_rating";
+
+export type ReviewConfig = {
+  enabled: boolean;
+  sort: ReviewSort;
+  maxReviews: number;
+};
+
 export type JobProgress = {
   discoveredCount: number;
   processedCount: number;
@@ -24,6 +32,7 @@ export type JobRecord = {
   status: JobStatus;
   policyJson: string;
   collectionConfigJson: string;
+  reviewConfigJson: string;
   createdAt: string;
   startedAt: string | null;
   finishedAt: string | null;

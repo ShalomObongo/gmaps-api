@@ -8,7 +8,14 @@ export type CreateJobInput = {
   status?: JobStatus;
   policyJson: string;
   collectionConfigJson: string;
+  reviewConfigJson?: string;
 };
+
+const DEFAULT_REVIEW_CONFIG_JSON = JSON.stringify({
+  enabled: false,
+  sort: "newest",
+  maxReviews: 0
+});
 
 export type JobsRepo = {
   create(input: CreateJobInput): JobRecord;
@@ -51,6 +58,7 @@ export function createJobsRepo(db: DatabaseHandle): JobsRepo {
       status,
       policy_json,
       collection_config_json,
+      review_config_json,
       created_at,
       started_at,
       finished_at,
@@ -68,6 +76,7 @@ export function createJobsRepo(db: DatabaseHandle): JobsRepo {
       @status,
       @policyJson,
       @collectionConfigJson,
+      @reviewConfigJson,
       @createdAt,
       @startedAt,
       @finishedAt,
@@ -147,6 +156,7 @@ export function createJobsRepo(db: DatabaseHandle): JobsRepo {
         status: input.status ?? "queued",
         policyJson: input.policyJson,
         collectionConfigJson: input.collectionConfigJson,
+        reviewConfigJson: input.reviewConfigJson ?? DEFAULT_REVIEW_CONFIG_JSON,
         createdAt: now,
         startedAt: null,
         finishedAt: null,
@@ -273,6 +283,7 @@ function selectByIdSql(): string {
       status,
       policy_json AS policyJson,
       collection_config_json AS collectionConfigJson,
+      review_config_json AS reviewConfigJson,
       created_at AS createdAt,
       started_at AS startedAt,
       finished_at AS finishedAt,
