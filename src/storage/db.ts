@@ -71,6 +71,36 @@ export function createDatabase(filePath: string): DatabaseHandle {
   ensureColumn(db, "places", "phone", "TEXT");
   ensureColumn(db, "places", "opening_hours_json", "TEXT");
 
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS place_reviews (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      job_id TEXT NOT NULL,
+      place_key TEXT NOT NULL,
+      review_id TEXT NOT NULL,
+      sort_order TEXT NOT NULL,
+      position INTEGER NOT NULL,
+      author_name TEXT,
+      rating REAL,
+      text TEXT,
+      published_at TEXT,
+      collected_at TEXT NOT NULL,
+      UNIQUE(job_id, place_key, review_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_place_reviews_job_place ON place_reviews(job_id, place_key);
+  `);
+
+  ensureColumn(db, "place_reviews", "job_id", "TEXT NOT NULL");
+  ensureColumn(db, "place_reviews", "place_key", "TEXT NOT NULL");
+  ensureColumn(db, "place_reviews", "review_id", "TEXT NOT NULL");
+  ensureColumn(db, "place_reviews", "sort_order", "TEXT NOT NULL DEFAULT 'newest'");
+  ensureColumn(db, "place_reviews", "position", "INTEGER NOT NULL DEFAULT 1");
+  ensureColumn(db, "place_reviews", "author_name", "TEXT");
+  ensureColumn(db, "place_reviews", "rating", "REAL");
+  ensureColumn(db, "place_reviews", "text", "TEXT");
+  ensureColumn(db, "place_reviews", "published_at", "TEXT");
+  ensureColumn(db, "place_reviews", "collected_at", "TEXT NOT NULL DEFAULT ''");
+
   return db;
 }
 

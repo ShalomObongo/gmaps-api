@@ -65,3 +65,20 @@ export type PlaceRecord = PlaceCandidate & {
   placeKey: string;
   discoveredAt: string;
 };
+
+export type PlaceReview = {
+  reviewId: string;
+  sortOrder: ReviewSort;
+  position: number;
+  authorName: string | null;
+  rating: number | null;
+  text: string | null;
+  publishedAt: string | null;
+};
+
+export type PlaceReviewRecord = PlaceReview & {
+  id: number;
+  jobId: string;
+  placeKey: string;
+  collectedAt: string;
+};
