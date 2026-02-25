@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Place Detail Extraction** - Place records include core and available business/contact fields. (completed 2026-02-25)
 - [x] **Phase 5: Reviews Collection Controls** - Runs can collect reviews with configurable ordering and caps. (Completed 2026-02-25)
 - [x] **Phase 6: Results API Access** - Completed run data is retrievable through structured API endpoints. (Completed 2026-02-25)
-- [ ] **Phase 7: JSON and CSV Exports** - Users can export run outputs in standard scraper-friendly formats.
+- [x] **Phase 7: JSON and CSV Exports** - Users can export run outputs in standard scraper-friendly formats. (Completed 2026-02-25)
 
 ## Phase Details
 
@@ -111,7 +111,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 07-01-PLAN.md - Extract shared completed-job output builder and refactor results route to use one source of truth.
-- [ ] 07-02-PLAN.md - Implement JSON/CSV export endpoint, CSV serializer, and server registration with attachment semantics.
+- [x] 07-02-PLAN.md - Implement JSON/CSV export endpoint, CSV serializer, and server registration with attachment semantics.
 
 ## Progress
 
@@ -126,4 +126,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 4. Place Detail Extraction | 2/2 | Complete   | 2026-02-25 |
 | 5. Reviews Collection Controls | 2/2 | Complete | 2026-02-25 |
 | 6. Results API Access | 1/1 | Complete | 2026-02-25 |
-| 7. JSON and CSV Exports | 1/2 | In Progress | - |
+| 7. JSON and CSV Exports | 2/2 | Complete | 2026-02-25 |

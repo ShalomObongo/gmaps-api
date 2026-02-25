@@ -37,7 +37,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **OUTP-01**: User can fetch structured job results through API endpoints
 - [x] **OUTP-02**: User can export results as JSON
-- [ ] **OUTP-03**: User can export results as CSV
+- [x] **OUTP-03**: User can export results as CSV
 
 ## v2 Requirements
 
@@ -85,7 +85,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SAFE-01 | Phase 1 | Complete |
 | OUTP-01 | Phase 6 | Complete |
 | OUTP-02 | Phase 7 | Complete |
-| OUTP-03 | Phase 7 | Pending |
+| OUTP-03 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 17 total
@@ -94,4 +94,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-24*
-*Last updated: 2026-02-25 after phase 6 completion*
+*Last updated: 2026-02-25 after phase 7 completion*
