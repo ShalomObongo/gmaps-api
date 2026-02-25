@@ -5,16 +5,16 @@
 See: `.planning/PROJECT.md` (updated 2026-02-24)
 
 **Core value:** Given a search query and location scope, return reliable, structured Google Maps place data locally with no required paid services.
-**Current focus:** Phase 6 - Results API Access
+**Current focus:** Phase 7 - JSON and CSV Exports
 
 ## Current Position
 
-Phase: 6 of 7 (Results API Access)
+Phase: 7 of 7 (JSON and CSV Exports)
 Plan: 0 of TBD in current phase
 Status: Ready to plan
-Last activity: 2026-02-25 - Phase 5 verified and completed.
+Last activity: 2026-02-25 - Phase 6 verified and completed.
 
-Progress: [███████░░░] 71%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -41,6 +41,7 @@ Progress: [███████░░░] 71%
 | Phase 04 P02 | 10min | 2 tasks | 8 files |
 | Phase 05 P01 | 4min | 2 tasks | 8 files |
 | Phase 05 P02 | 5min | 3 tasks | 9 files |
+| Phase 06 P01 | 4min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,8 @@ Recent decisions affecting current work:
 - [Phase 05]: Review intake defaults are explicit (enabled=false, sort='newest', maxReviews=0) for deterministic downstream behavior.
 - [Phase 05]: Review rows are keyed by (job_id, place_key, review_id) so retries remain idempotent without losing per-place ordering.
 - [Phase 05]: Worker review extraction remains best-effort per place and never fails whole job completion when review reads error.
+- [Phase 06]: Use 409 results_not_ready for queued/running/failed jobs and reserve 200 for completed jobs only.
+- [Phase 06]: Read all reviews with one ordered listByJob query and group in memory by placeKey.
 
 ### Pending Todos
 
@@ -84,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-25 03:18
-Stopped at: Completed Phase 5 execution and verification.
+Last session: 2026-02-25 00:34
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None

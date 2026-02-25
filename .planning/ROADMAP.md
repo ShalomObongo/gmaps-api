@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Coverage and Deduplication** - Runs go beyond first viewport and return unique places. (Completed 2026-02-25)
 - [x] **Phase 4: Place Detail Extraction** - Place records include core and available business/contact fields. (completed 2026-02-25)
 - [x] **Phase 5: Reviews Collection Controls** - Runs can collect reviews with configurable ordering and caps. (Completed 2026-02-25)
-- [ ] **Phase 6: Results API Access** - Completed run data is retrievable through structured API endpoints.
+- [x] **Phase 6: Results API Access** - Completed run data is retrievable through structured API endpoints. (Completed 2026-02-25)
 - [ ] **Phase 7: JSON and CSV Exports** - Users can export run outputs in standard scraper-friendly formats.
 
 ## Phase Details
@@ -98,7 +98,7 @@ Plans:
   2. User receives clear API response behavior for in-progress, completed, and failed jobs.
 **Plans**: 1 plan
 Plans:
-- [ ] 06-01-PLAN.md - Add a state-gated job results endpoint that returns structured completed output with explicit non-ready behavior.
+- [x] 06-01-PLAN.md - Add a state-gated job results endpoint that returns structured completed output with explicit non-ready behavior.
 
 ### Phase 7: JSON and CSV Exports
 **Goal**: Users can export job outputs into common developer-friendly file formats.
@@ -122,5 +122,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 3. Coverage and Deduplication | 3/3 | Complete | 2026-02-25 |
 | 4. Place Detail Extraction | 2/2 | Complete   | 2026-02-25 |
 | 5. Reviews Collection Controls | 2/2 | Complete | 2026-02-25 |
-| 6. Results API Access | 0/TBD | Not started | - |
+| 6. Results API Access | 1/1 | Complete | 2026-02-25 |
 | 7. JSON and CSV Exports | 0/TBD | Not started | - |
