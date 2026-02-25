@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Job Intake and Visibility** - Users can submit jobs through all v1 inputs and track them while running. (Completed 2026-02-25)
 - [x] **Phase 3: Coverage and Deduplication** - Runs go beyond first viewport and return unique places. (Completed 2026-02-25)
 - [ ] **Phase 4: Place Detail Extraction** - Place records include core and available business/contact fields.
-- [ ] **Phase 5: Reviews Collection Controls** - Runs can collect reviews with configurable ordering and caps.
+- [x] **Phase 5: Reviews Collection Controls** - Runs can collect reviews with configurable ordering and caps. (Completed 2026-02-25)
 - [ ] **Phase 6: Results API Access** - Completed run data is retrievable through structured API endpoints.
 - [ ] **Phase 7: JSON and CSV Exports** - Users can export run outputs in standard scraper-friendly formats.
 
@@ -86,8 +86,8 @@ Plans:
   3. User can set a review cap and output respects the configured maximum.
 **Plans**: 2 plans
 Plans:
-- [ ] 05-01-PLAN.md - Add strict review controls to job intake and persist resolved review config per queued job.
-- [ ] 05-02-PLAN.md - Implement ordered capped review extraction and worker persistence through normalized place_reviews storage.
+- [x] 05-01-PLAN.md - Add strict review controls to job intake and persist resolved review config per queued job.
+- [x] 05-02-PLAN.md - Implement ordered capped review extraction and worker persistence through normalized place_reviews storage.
 
 ### Phase 6: Results API Access
 **Goal**: Users can retrieve structured results for completed jobs directly from API endpoints.
@@ -119,6 +119,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 2. Job Intake and Visibility | 2/2 | Complete | 2026-02-25 |
 | 3. Coverage and Deduplication | 3/3 | Complete | 2026-02-25 |
 | 4. Place Detail Extraction | 0/TBD | Not started | - |
-| 5. Reviews Collection Controls | 0/TBD | Not started | - |
+| 5. Reviews Collection Controls | 2/2 | Complete | 2026-02-25 |
 | 6. Results API Access | 0/TBD | Not started | - |
 | 7. JSON and CSV Exports | 0/TBD | Not started | - |
