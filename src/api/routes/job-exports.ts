@@ -83,14 +83,12 @@ export async function registerJobExportsRoutes(
       if (format === "csv") {
         const csv = await serializeJobResultsCsv(result.model);
         return reply
-          .code(200)
           .type("text/csv; charset=utf-8")
           .header("content-disposition", `attachment; filename=\"job-${params.id}.csv\"`)
           .send(csv);
       }
 
       return reply
-        .code(200)
         .type("application/json")
         .header("content-disposition", `attachment; filename=\"job-${params.id}.json\"`)
         .send(result.model);
