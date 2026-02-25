@@ -52,6 +52,11 @@ describe("POST /jobs", () => {
       maxScrollSteps: 20,
       maxViewportPans: 0
     });
+    expect(body.input.reviews).toMatchObject({
+      enabled: false,
+      sort: "newest",
+      maxReviews: 0
+    });
 
     await app.close();
   });
@@ -70,6 +75,11 @@ describe("POST /jobs", () => {
         collection: {
           maxPlaces: 75,
           maxScrollSteps: 12
+        },
+        reviews: {
+          enabled: true,
+          sort: "most_relevant",
+          maxReviews: 25
         }
       }
     });
@@ -85,6 +95,11 @@ describe("POST /jobs", () => {
         maxPlaces: 75,
         maxScrollSteps: 12,
         maxViewportPans: 0
+      },
+      reviews: {
+        enabled: true,
+        sort: "most_relevant",
+        maxReviews: 25
       }
     });
 
@@ -119,6 +134,11 @@ describe("POST /jobs", () => {
         maxPlaces: 25,
         maxScrollSteps: 20,
         maxViewportPans: 2
+      },
+      reviews: {
+        enabled: false,
+        sort: "newest",
+        maxReviews: 0
       }
     });
 
@@ -184,6 +204,62 @@ describe("POST /jobs", () => {
         location: "seattle",
         collection: {
           maxPlaces: 0
+        }
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toMatchObject({ error: "invalid_request" });
+
+    await app.close();
+  });
+
+  it("rejects unsupported review sort values", async () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const app = await buildServer({ databaseFile: join(workDir, "local.db"), logger: false });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/jobs",
+      payload: {
+        inputType: "keyword_location",
+        query: "coffee",
+        location: "seattle",
+        collection: {
+          maxPlaces: 10
+        },
+        reviews: {
+          enabled: true,
+          sort: "top",
+          maxReviews: 10
+        }
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toMatchObject({ error: "invalid_request" });
+
+    await app.close();
+  });
+
+  it("rejects out-of-range review caps", async () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const app = await buildServer({ databaseFile: join(workDir, "local.db"), logger: false });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/jobs",
+      payload: {
+        inputType: "keyword_location",
+        query: "coffee",
+        location: "seattle",
+        collection: {
+          maxPlaces: 10
+        },
+        reviews: {
+          enabled: true,
+          sort: "newest",
+          maxReviews: 201
         }
       }
     });

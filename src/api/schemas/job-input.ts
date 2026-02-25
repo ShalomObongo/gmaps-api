@@ -6,6 +6,10 @@ const COLLECTION_LIMITS = {
   maxViewportPans: { min: 0, max: 25 }
 } as const;
 
+const REVIEW_LIMITS = {
+  maxReviews: { min: 0, max: 200 }
+} as const;
+
 export const collectionControlsSchema = z.object({
   maxPlaces: z.number().int().min(COLLECTION_LIMITS.maxPlaces.min).max(COLLECTION_LIMITS.maxPlaces.max),
   maxScrollSteps: z
@@ -33,11 +37,26 @@ export const jobPolicySchema = z.object({
   captchaMode: z.enum(["off", "optional"]).optional()
 }).optional();
 
+export const reviewControlsSchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    sort: z.enum(["newest", "most_relevant", "highest_rating", "lowest_rating"]).optional(),
+    maxReviews: z
+      .number()
+      .int()
+      .min(REVIEW_LIMITS.maxReviews.min)
+      .max(REVIEW_LIMITS.maxReviews.max)
+      .optional()
+  })
+  .strict()
+  .optional();
+
 const sharedJobOptionsSchema = z.object({
   policy: jobPolicySchema,
   includeSensitiveFields: z.boolean().optional(),
   requestedFields: z.array(z.string().min(1)).optional(),
-  collection: collectionControlsSchema
+  collection: collectionControlsSchema,
+  reviews: reviewControlsSchema
 });
 
 const keywordLocationInputSchema = sharedJobOptionsSchema.extend({
@@ -63,4 +82,5 @@ export const jobInputSchema = z.discriminatedUnion("inputType", [
 ]);
 
 export type CollectionControlsInput = z.infer<typeof collectionControlsSchema>;
+export type ReviewControlsInput = NonNullable<z.infer<typeof reviewControlsSchema>>;
 export type JobInput = z.infer<typeof jobInputSchema>;

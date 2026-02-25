@@ -71,7 +71,8 @@ export async function registerJobRoutes(app: FastifyInstance, jobsRepo: JobsRepo
         location: normalizedTarget.location ?? undefined,
         status: "queued",
         policyJson: JSON.stringify(policy),
-        collectionConfigJson: JSON.stringify(normalizedTarget.collection)
+        collectionConfigJson: JSON.stringify(normalizedTarget.collection),
+        reviewConfigJson: JSON.stringify(normalizedTarget.reviews)
       });
 
       return reply.code(202).send({
@@ -83,7 +84,8 @@ export async function registerJobRoutes(app: FastifyInstance, jobsRepo: JobsRepo
           query: normalizedTarget.query,
           location: normalizedTarget.location,
           placeId: normalizedTarget.placeId,
-          collection: normalizedTarget.collection
+          collection: normalizedTarget.collection,
+          reviews: normalizedTarget.reviews
         },
         fields: sensitivePolicy.fields,
         guardrails: {
