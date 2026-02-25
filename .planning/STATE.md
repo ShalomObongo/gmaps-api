@@ -40,6 +40,7 @@ Progress: [████░░░░░░] 43%
 | Phase 04 P01 | 8min | 2 tasks | 6 files |
 | Phase 04 P02 | 10min | 2 tasks | 8 files |
 | Phase 05 P01 | 4min | 2 tasks | 8 files |
+| Phase 05 P02 | 5min | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 - [Phase 04]: Worker enrichment remains best-effort with nullable contact outputs to avoid run-level failures.
 - [Phase 05]: Review controls are persisted as JSON per job to keep migration changes additive and worker-friendly.
 - [Phase 05]: Review intake defaults are explicit (enabled=false, sort='newest', maxReviews=0) for deterministic downstream behavior.
+- [Phase 05]: Review rows are keyed by (job_id, place_key, review_id) so retries remain idempotent without losing per-place ordering.
+- [Phase 05]: Worker review extraction remains best-effort per place and never fails whole job completion when review reads error.
 
 ### Pending Todos
 
