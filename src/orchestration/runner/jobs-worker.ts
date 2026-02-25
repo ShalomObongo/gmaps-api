@@ -13,6 +13,7 @@ import {
   type CollectPlacesParams,
   type CollectStep
 } from "../../crawler/maps/collect-places.js";
+import { closeLiveDiscoverySession, discoverPlacesLive } from "../../crawler/maps/discover-places-live.js";
 
 export type WorkerResult = {
   discoveredCount?: number;
@@ -175,6 +176,9 @@ async function processNextJob(
     });
   } finally {
     clearInterval(heartbeatTimer);
+    if (discoverStep === defaultDiscoverStep) {
+      await closeDefaultDiscoverySession(claimedJob.id);
+    }
   }
 }
 
@@ -288,24 +292,40 @@ function parseCollectionConfig(raw: string): CollectionConfig {
   };
 }
 
-async function defaultDiscoverStep(step: CollectStep): Promise<PlaceCandidate[]> {
-  const suffix = `${step.viewportPan}-${step.scrollStep}`;
-  return [
-    {
-      placeId: `stub-${suffix}`,
-      name: `Stub Place ${suffix}`,
-      category: null,
-      rating: null,
-      reviewsCount: null,
-      address: null,
-      mapsUrl: null,
-      lat: null,
-      lng: null,
-      website: null,
-      phone: null,
-      openingHoursJson: null
-    }
-  ];
+async function defaultDiscoverStep(step: CollectStep, job: JobRecord): Promise<PlaceCandidate[]> {
+  if (useStubDiscovery()) {
+    const suffix = `${step.viewportPan}-${step.scrollStep}`;
+    return [
+      {
+        placeId: `stub-${suffix}`,
+        name: `Stub Place ${suffix}`,
+        category: null,
+        rating: null,
+        reviewsCount: null,
+        address: null,
+        mapsUrl: null,
+        lat: null,
+        lng: null,
+        website: null,
+        phone: null,
+        openingHoursJson: null
+      }
+    ];
+  }
+
+  return discoverPlacesLive(step, job);
+}
+
+async function closeDefaultDiscoverySession(jobId: string): Promise<void> {
+  if (useStubDiscovery()) {
+    return;
+  }
+
+  await closeLiveDiscoverySession(jobId);
+}
+
+function useStubDiscovery(): boolean {
+  return process.env.NODE_ENV === "test" || process.env.GMAPS_USE_STUB_DISCOVERY === "1";
 }
 
 async function defaultEnrichCandidate(candidate: PlaceCandidate): Promise<ExtractedPlaceDetails> {

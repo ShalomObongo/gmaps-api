@@ -25,6 +25,9 @@ describe("job guardrails", () => {
         inputType: "keyword_location",
         query: "plumbers",
         location: "nyc",
+        collection: {
+          maxPlaces: 10
+        },
         requestedFields: ["reviewAuthor"]
       }
     });
@@ -44,6 +47,9 @@ describe("job guardrails", () => {
         inputType: "keyword_location",
         query: "plumbers",
         location: "nyc",
+        collection: {
+          maxPlaces: 10
+        },
         includeSensitiveFields: true,
         requestedFields: ["reviewAuthor"]
       }
