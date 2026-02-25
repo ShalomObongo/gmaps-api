@@ -19,6 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Reviews Collection Controls** - Runs can collect reviews with configurable ordering and caps. (Completed 2026-02-25)
 - [x] **Phase 6: Results API Access** - Completed run data is retrievable through structured API endpoints. (Completed 2026-02-25)
 - [x] **Phase 7: JSON and CSV Exports** - Users can export run outputs in standard scraper-friendly formats. (Completed 2026-02-25)
+- [x] **Phase 8: Analyze the codebase and create proper documentation and a README for the project** - Users can onboard and operate the API through code-backed project documentation. (Completed 2026-02-25)
 
 ## Phase Details
 
@@ -116,7 +117,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -127,3 +128,15 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 5. Reviews Collection Controls | 2/2 | Complete | 2026-02-25 |
 | 6. Results API Access | 1/1 | Complete | 2026-02-25 |
 | 7. JSON and CSV Exports | 2/2 | Complete | 2026-02-25 |
+| 8. Analyze the codebase and create proper documentation and a README for the project | 2/2 | Complete | 2026-02-25 |
+
+### Phase 8: Analyze the codebase and create proper documentation and a README for the project
+
+**Goal:** Users can quickly onboard, run, and extend the API using accurate README and codebase-backed documentation.
+**Requirements**: DOCS-01, DOCS-02, DOCS-03
+**Depends on:** Phase 7
+**Plans:** 2 plans
+
+Plans:
+- [x] 08-01-PLAN.md - Create README quickstart plus operations/development docs anchored to runtime defaults and tested behavior.
+- [x] 08-02-PLAN.md - Create API and architecture reference docs from route contracts and server/data-flow wiring.

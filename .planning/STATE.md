@@ -5,23 +5,23 @@
 See: `.planning/PROJECT.md` (updated 2026-02-24)
 
 **Core value:** Given a search query and location scope, return reliable, structured Google Maps place data locally with no required paid services.
-**Current focus:** Milestone complete - all planned phases executed
+**Current focus:** Milestone complete with documentation and onboarding finalized
 
 ## Current Position
 
-Phase: 7 of 7 (JSON and CSV Exports)
+Phase: 8 of 8 (Analyze the codebase and create proper documentation and a README for the project)
 Plan: 2 of 2 in current phase
 Status: Complete
-Last activity: 2026-02-25 - Completed phase 7 verification and export delivery.
+Last activity: 2026-02-25 - Completed phase 8 documentation delivery and verification.
 
 Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
-- Average duration: 19 min
-- Total execution time: 2.2 hours
+- Total plans completed: 16
+- Average duration: 18 min
+- Total execution time: 2.7 hours
 
 **By Phase:**
 
@@ -80,6 +80,12 @@ Recent decisions affecting current work:
 - [Phase 07]: Kept uniqueAcceptedCount mapped to processedCount while centralizing model shaping. — Maintains Phase 6 API semantics during refactor.
 - [Phase 07]: Used @fast-csv/format to generate CSV output for standards-safe escaping. — Avoids hand-rolled CSV quoting edge cases.
 - [Phase 07]: Kept /jobs/:id/exports state gates aligned with /jobs/:id/results by reusing buildJobResultsModel before format branching. — Prevents divergence between result and export readiness behavior.
+- [Phase 08]: Split documentation into focused README, operations, development, API, and architecture pages tied directly to runtime schema and route tests. — Reduces onboarding friction while minimizing docs drift.
+- [Phase 08]: Documented state-gated 404/409/200 API behavior and shared output assembly around buildJobResultsModel. — Makes consumption behavior explicit without source-code spelunking.
+
+### Roadmap Evolution
+
+- Phase 8 executed: delivered README + docs set and closed all documentation requirements
 
 ### Pending Todos
 
@@ -93,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-25 04:09
-Stopped at: Completed phase 07 (json-and-csv-exports)
+Last session: 2026-02-25 17:17
+Stopped at: Completed phase 08 (documentation and README)
 Resume file: None

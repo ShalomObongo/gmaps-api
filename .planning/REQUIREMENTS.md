@@ -39,6 +39,12 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **OUTP-02**: User can export results as JSON
 - [x] **OUTP-03**: User can export results as CSV
 
+### Documentation & Developer Experience
+
+- [x] **DOCS-01**: User can bootstrap the project locally from README quickstart instructions
+- [x] **DOCS-02**: User can find runtime prerequisites, env defaults, and troubleshooting guidance in dedicated docs
+- [x] **DOCS-03**: User can reference accurate API contracts and architecture flow from project documentation
+
 ## v2 Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
@@ -86,12 +92,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OUTP-01 | Phase 6 | Complete |
 | OUTP-02 | Phase 7 | Complete |
 | OUTP-03 | Phase 7 | Complete |
+| DOCS-01 | Phase 8 | Complete |
+| DOCS-02 | Phase 8 | Complete |
+| DOCS-03 | Phase 8 | Complete |
 
 **Coverage:**
-- v1 requirements: 17 total
-- Mapped to phases: 17
+- v1 requirements: 20 total
+- Mapped to phases: 20
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-24*
-*Last updated: 2026-02-25 after phase 7 completion*
+*Last updated: 2026-02-25 after phase 8 completion*
