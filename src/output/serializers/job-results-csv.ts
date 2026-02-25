@@ -14,6 +14,7 @@ export const JOB_RESULTS_CSV_HEADERS = [
   "lat",
   "lng",
   "website",
+  "email",
   "phone",
   "openingHoursJson",
   "discoveredAt",
@@ -33,6 +34,7 @@ type JobResultsCsvRow = {
   lat: number | null;
   lng: number | null;
   website: string | null;
+  email: string | null;
   phone: string | null;
   openingHoursJson: string | null;
   discoveredAt: string;
@@ -53,6 +55,7 @@ export async function serializeJobResultsCsv(model: CompletedJobResultsModel): P
     lat: place.lat,
     lng: place.lng,
     website: place.website,
+    email: place.email,
     phone: place.phone,
     openingHoursJson: place.openingHoursJson,
     discoveredAt: place.discoveredAt,

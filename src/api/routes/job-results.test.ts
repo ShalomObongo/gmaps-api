@@ -138,6 +138,7 @@ describe("GET /jobs/:id/results", () => {
         lat: 47.6,
         lng: -122.3,
         website: "https://alpha.example",
+        email: "hello@alpha.example",
         phone: "555-1000",
         openingHoursJson: null
       },
@@ -156,6 +157,7 @@ describe("GET /jobs/:id/results", () => {
         lat: 47.61,
         lng: -122.31,
         website: null,
+        email: null,
         phone: null,
         openingHoursJson: null
       },

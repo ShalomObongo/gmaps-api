@@ -55,6 +55,7 @@ export type PlaceCandidate = {
   lat: number | null;
   lng: number | null;
   website: string | null;
+  email: string | null;
   phone: string | null;
   openingHoursJson: string | null;
 };

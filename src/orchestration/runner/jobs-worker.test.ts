@@ -85,6 +85,7 @@ describe("jobs worker ingestion pipeline", () => {
         if (candidate.placeId === "pid-a") {
           return {
             website: "https://place-a.example",
+            email: "hello@place-a.example",
             phone: "+1 206 555 0101",
             openingHoursJson: '["Mon 9-5"]'
           };
@@ -92,6 +93,7 @@ describe("jobs worker ingestion pipeline", () => {
 
         return {
           website: null,
+          email: null,
           phone: null,
           openingHoursJson: null
         };
@@ -110,6 +112,7 @@ describe("jobs worker ingestion pipeline", () => {
           lat: null,
           lng: null,
           website: null,
+          email: null,
           phone: null,
           openingHoursJson: null
         }));
@@ -134,12 +137,14 @@ describe("jobs worker ingestion pipeline", () => {
     expect(places[0]).toMatchObject({
       placeId: "pid-a",
       website: "https://place-a.example",
+      email: "hello@place-a.example",
       phone: "+1 206 555 0101",
       openingHoursJson: '["Mon 9-5"]'
     });
     expect(places[1]).toMatchObject({
       placeId: "pid-b",
       website: null,
+      email: null,
       phone: null,
       openingHoursJson: null
     });

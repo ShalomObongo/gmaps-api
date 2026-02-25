@@ -12,6 +12,7 @@ export const PlaceRecordSchema = z.strictObject({
   lat: z.number().nullable(),
   lng: z.number().nullable(),
   website: z.string().nullable(),
+  email: z.string().nullable(),
   phone: z.string().nullable(),
   openingHoursJson: z.string().nullable()
 });
@@ -27,6 +28,7 @@ export type NormalizePlaceRecordInput = {
   lat?: unknown;
   lng?: unknown;
   website?: unknown;
+  email?: unknown;
   phone?: unknown;
   openingHoursJson?: unknown;
 };
@@ -43,6 +45,7 @@ export function normalizePlaceRecord(input: NormalizePlaceRecordInput): PlaceCan
     lat: normalizeNullableNumber(input.lat),
     lng: normalizeNullableNumber(input.lng),
     website: normalizeNullableText(input.website),
+    email: normalizeNullableText(input.email),
     phone: normalizeNullableText(input.phone),
     openingHoursJson: normalizeNullableText(input.openingHoursJson)
   });

@@ -8,6 +8,7 @@ import type { PlaceReviewsRepo } from "../../storage/place-reviews-repo.js";
 import { normalizePlaceRecord } from "../../crawler/maps/normalize-place-record.js";
 import type { ExtractedPlaceDetails } from "../../crawler/maps/extract-place-details.js";
 import { extractPlaceReviews, type NormalizedPlaceReview } from "../../crawler/maps/extract-place-reviews.js";
+import { closeLiveEnrichmentSession, enrichPlaceLive } from "../../crawler/maps/enrich-place-live.js";
 import {
   collectPlacesFromMaps,
   type CollectPlacesParams,
@@ -176,8 +177,8 @@ async function processNextJob(
     });
   } finally {
     clearInterval(heartbeatTimer);
-    if (discoverStep === defaultDiscoverStep) {
-      await closeDefaultDiscoverySession(claimedJob.id);
+    if (discoverStep === defaultDiscoverStep || enrichCandidate === defaultEnrichCandidate) {
+      await closeDefaultLiveSessions(claimedJob.id);
     }
   }
 }
@@ -231,6 +232,7 @@ async function executeCollectorJob(input: ExecuteCollectorJobInput): Promise<Wor
     const enrichedCandidate: PlaceCandidate = {
       ...normalizedCore,
       website: details.website ?? normalizedCore.website,
+      email: details.email ?? normalizedCore.email,
       phone: details.phone ?? normalizedCore.phone,
       openingHoursJson: details.openingHoursJson ?? normalizedCore.openingHoursJson
     };
@@ -307,6 +309,7 @@ async function defaultDiscoverStep(step: CollectStep, job: JobRecord): Promise<P
         lat: null,
         lng: null,
         website: null,
+        email: null,
         phone: null,
         openingHoursJson: null
       }
@@ -324,16 +327,25 @@ async function closeDefaultDiscoverySession(jobId: string): Promise<void> {
   await closeLiveDiscoverySession(jobId);
 }
 
+async function closeDefaultLiveSessions(jobId: string): Promise<void> {
+  await Promise.allSettled([closeDefaultDiscoverySession(jobId), closeLiveEnrichmentSession(jobId)]);
+}
+
 function useStubDiscovery(): boolean {
   return process.env.NODE_ENV === "test" || process.env.GMAPS_USE_STUB_DISCOVERY === "1";
 }
 
-async function defaultEnrichCandidate(candidate: PlaceCandidate): Promise<ExtractedPlaceDetails> {
-  return {
-    website: null,
-    phone: null,
-    openingHoursJson: null
-  };
+async function defaultEnrichCandidate(candidate: PlaceCandidate, job: JobRecord): Promise<ExtractedPlaceDetails> {
+  if (useStubDiscovery()) {
+    return {
+      website: null,
+      email: null,
+      phone: null,
+      openingHoursJson: null
+    };
+  }
+
+  return enrichPlaceLive(candidate, job);
 }
 
 async function defaultExtractReviewsForPlace(

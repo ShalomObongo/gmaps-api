@@ -55,6 +55,7 @@ export function createDatabase(filePath: string): DatabaseHandle {
       lat REAL,
       lng REAL,
       website TEXT,
+      email TEXT,
       phone TEXT,
       opening_hours_json TEXT,
       discovered_at TEXT NOT NULL,
@@ -68,6 +69,7 @@ export function createDatabase(filePath: string): DatabaseHandle {
   ensureColumn(db, "places", "rating", "REAL");
   ensureColumn(db, "places", "reviews_count", "INTEGER");
   ensureColumn(db, "places", "website", "TEXT");
+  ensureColumn(db, "places", "email", "TEXT");
   ensureColumn(db, "places", "phone", "TEXT");
   ensureColumn(db, "places", "opening_hours_json", "TEXT");
 

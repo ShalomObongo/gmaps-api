@@ -34,6 +34,7 @@ describe("places repository dedup", () => {
         lat: 47.6097,
         lng: -122.3331,
         website: "https://cafe-one.example",
+        email: "hello@cafe-one.example",
         phone: "+1 206 555 1000",
         openingHoursJson: '["Mon 9-5"]'
       }
@@ -51,6 +52,7 @@ describe("places repository dedup", () => {
         lat: 47.6097,
         lng: -122.3331,
         website: "https://cafe-one.example",
+        email: "hello@cafe-one.example",
         phone: "+1 206 555 1000",
         openingHoursJson: '["Mon 9-5"]'
       }
@@ -67,6 +69,7 @@ describe("places repository dedup", () => {
         reviewsCount: 128,
         address: "123 Main St",
         website: "https://cafe-one.example",
+        email: "hello@cafe-one.example",
         phone: "+1 206 555 1000",
         openingHoursJson: '["Mon 9-5"]'
       })
@@ -93,6 +96,7 @@ describe("places repository dedup", () => {
         lat: null,
         lng: null,
         website: null,
+        email: null,
         phone: null,
         openingHoursJson: null
       }
@@ -110,6 +114,7 @@ describe("places repository dedup", () => {
         lat: null,
         lng: null,
         website: null,
+        email: null,
         phone: null,
         openingHoursJson: null
       }
@@ -139,6 +144,7 @@ describe("places repository dedup", () => {
         lat: 47.611234,
         lng: -122.337889,
         website: null,
+        email: null,
         phone: null,
         openingHoursJson: null
       }
@@ -157,6 +163,7 @@ describe("places repository dedup", () => {
         lat: 47.6112344,
         lng: -122.3378894,
         website: null,
+        email: null,
         phone: null,
         openingHoursJson: null
       }
@@ -205,6 +212,7 @@ describe("places repository dedup", () => {
         lat: null,
         lng: null,
         website: null,
+        email: null,
         phone: null,
         openingHoursJson: null
       }
@@ -216,6 +224,7 @@ describe("places repository dedup", () => {
     expect(names.has("rating")).toBe(true);
     expect(names.has("reviews_count")).toBe(true);
     expect(names.has("website")).toBe(true);
+    expect(names.has("email")).toBe(true);
     expect(names.has("phone")).toBe(true);
     expect(names.has("opening_hours_json")).toBe(true);
     expect(repo.listByJob("job-upgrade")).toHaveLength(1);

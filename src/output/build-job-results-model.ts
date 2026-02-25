@@ -26,6 +26,7 @@ export type JobResultPlace = {
   lat: number | null;
   lng: number | null;
   website: string | null;
+  email: string | null;
   phone: string | null;
   openingHoursJson: string | null;
   discoveredAt: string;
@@ -131,6 +132,7 @@ export function buildJobResultsModel(
           lat: place.lat,
           lng: place.lng,
           website: place.website,
+          email: place.email,
           phone: place.phone,
           openingHoursJson: place.openingHoursJson,
           discoveredAt: place.discoveredAt,

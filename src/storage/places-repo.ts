@@ -33,6 +33,7 @@ export function createPlacesRepo(db: DatabaseHandle): PlacesRepo {
       lat,
       lng,
       website,
+      email,
       phone,
       opening_hours_json,
       discovered_at
@@ -50,6 +51,7 @@ export function createPlacesRepo(db: DatabaseHandle): PlacesRepo {
       @lat,
       @lng,
       @website,
+      @email,
       @phone,
       @openingHoursJson,
       @discoveredAt
@@ -72,6 +74,7 @@ export function createPlacesRepo(db: DatabaseHandle): PlacesRepo {
       lat,
       lng,
       website,
+      email,
       phone,
       opening_hours_json AS openingHoursJson,
       discovered_at AS discoveredAt
@@ -96,6 +99,7 @@ export function createPlacesRepo(db: DatabaseHandle): PlacesRepo {
         lat: candidate.lat,
         lng: candidate.lng,
         website: candidate.website,
+        email: candidate.email,
         phone: candidate.phone,
         openingHoursJson: candidate.openingHoursJson,
         discoveredAt

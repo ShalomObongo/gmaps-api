@@ -84,6 +84,7 @@ function createScriptedDiscoverer(counts: number[]): (step: {
       lat: null,
       lng: null,
       website: null,
+      email: null,
       phone: null,
       openingHoursJson: null
     }));

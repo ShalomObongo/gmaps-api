@@ -176,6 +176,7 @@ describe("GET /jobs/:id/exports", () => {
         lat: 47.6,
         lng: -122.3,
         website: "https://alpha.example",
+        email: "hello@alpha.example",
         phone: "555-1000",
         openingHoursJson: null
       },

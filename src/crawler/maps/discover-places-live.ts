@@ -65,6 +65,7 @@ export async function discoverPlacesLive(step: CollectStep, job: JobRecord): Pro
       lat: latLng?.lat ?? null,
       lng: latLng?.lng ?? null,
       website: null,
+      email: null,
       phone: candidate.phone,
       openingHoursJson: null
     });

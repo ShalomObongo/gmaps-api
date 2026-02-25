@@ -14,6 +14,7 @@ describe("normalizePlaceRecord", () => {
       lat: "47.6097",
       lng: -122.3331,
       website: "https://cafe-one.example",
+      email: " contact@cafe-one.example ",
       phone: "+1 206 555 0101",
       openingHoursJson: '["Mon 9-5"]'
     });
@@ -29,6 +30,7 @@ describe("normalizePlaceRecord", () => {
       lat: 47.6097,
       lng: -122.3331,
       website: "https://cafe-one.example",
+      email: "contact@cafe-one.example",
       phone: "+1 206 555 0101",
       openingHoursJson: '["Mon 9-5"]'
     });
@@ -46,6 +48,7 @@ describe("normalizePlaceRecord", () => {
       lat: "north",
       lng: undefined,
       website: undefined,
+      email: "",
       phone: "",
       openingHoursJson: null
     });
@@ -61,6 +64,7 @@ describe("normalizePlaceRecord", () => {
       lat: null,
       lng: null,
       website: null,
+      email: null,
       phone: null,
       openingHoursJson: null
     });
