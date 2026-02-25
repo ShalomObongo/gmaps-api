@@ -4,6 +4,7 @@ import { RUNTIME_DEFAULTS } from "./config/runtime-defaults.js";
 import { createDatabase } from "./storage/db.js";
 import { createJobsRepo } from "./storage/jobs-repo.js";
 import { createPlacesRepo } from "./storage/places-repo.js";
+import { createPlaceReviewsRepo } from "./storage/place-reviews-repo.js";
 import { registerRateLimitPlugin } from "./api/plugins/rate-limit.js";
 import { registerJobRoutes } from "./api/routes/jobs.js";
 import { registerJobStatusRoutes } from "./api/routes/job-status.js";
@@ -24,9 +25,11 @@ export async function buildServer(options: BuildServerOptions = {}): Promise<Fas
   const db = createDatabase(options.databaseFile ?? env.DATABASE_FILE);
   const jobsRepo = createJobsRepo(db);
   const placesRepo = createPlacesRepo(db);
+  const placeReviewsRepo = createPlaceReviewsRepo(db);
   const worker = createJobsWorker({
     jobsRepo,
     placesRepo,
+    placeReviewsRepo,
     pollIntervalMs: options.workerPollIntervalMs,
     heartbeatIntervalMs: options.workerHeartbeatIntervalMs,
     executeJob: options.workerExecuteJob

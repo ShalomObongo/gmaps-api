@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { createDatabase, type DatabaseHandle } from "../../storage/db.js";
 import { createJobsRepo } from "../../storage/jobs-repo.js";
 import { createPlacesRepo } from "../../storage/places-repo.js";
+import { createPlaceReviewsRepo } from "../../storage/place-reviews-repo.js";
 import { createJobsWorker } from "./jobs-worker.js";
 
 describe("jobs worker ingestion pipeline", () => {
@@ -29,10 +30,12 @@ describe("jobs worker ingestion pipeline", () => {
 
     const jobsRepo = createJobsRepo(db);
     const placesRepo = createPlacesRepo(db);
+    const placeReviewsRepo = createPlaceReviewsRepo(db);
     const job = jobsRepo.create({
       query: "coffee",
       policyJson: '{"pacingMs":0}',
-      collectionConfigJson: '{"maxPlaces":10,"maxScrollSteps":4,"maxViewportPans":0}'
+      collectionConfigJson: '{"maxPlaces":10,"maxScrollSteps":4,"maxViewportPans":0}',
+      reviewConfigJson: '{"enabled":true,"sort":"lowest_rating","maxReviews":2}'
     });
 
     const scripted = [
@@ -46,8 +49,38 @@ describe("jobs worker ingestion pipeline", () => {
     const worker = createJobsWorker({
       jobsRepo,
       placesRepo,
+      placeReviewsRepo,
       pollIntervalMs: 10,
       heartbeatIntervalMs: 10,
+      extractReviewsForPlace: async ({ sort }) => [
+        {
+          reviewId: "r-1",
+          sortOrder: sort,
+          position: 1,
+          authorName: "A",
+          rating: 1,
+          text: "bad",
+          publishedAt: "1 day ago"
+        },
+        {
+          reviewId: "r-2",
+          sortOrder: sort,
+          position: 2,
+          authorName: "B",
+          rating: 2,
+          text: "ok",
+          publishedAt: "2 days ago"
+        },
+        {
+          reviewId: "r-3",
+          sortOrder: sort,
+          position: 3,
+          authorName: "C",
+          rating: 3,
+          text: "ignored",
+          publishedAt: "3 days ago"
+        }
+      ],
       enrichCandidate: async (candidate) => {
         if (candidate.placeId === "pid-a") {
           return {
@@ -110,6 +143,12 @@ describe("jobs worker ingestion pipeline", () => {
       phone: null,
       openingHoursJson: null
     });
+
+    const reviews = placeReviewsRepo.listByJobAndPlace(job.id, "pid:pid-a");
+    expect(reviews).toEqual([
+      expect.objectContaining({ reviewId: "r-1", sortOrder: "lowest_rating", position: 1 }),
+      expect.objectContaining({ reviewId: "r-2", sortOrder: "lowest_rating", position: 2 })
+    ]);
   });
 });
 

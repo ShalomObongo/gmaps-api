@@ -1,11 +1,13 @@
 import { runWithPolicy } from "../../crawler/runner.js";
 import { resolveJobPolicy } from "../policy.js";
 import type { JobsRepo, UpdateProgressInput } from "../../storage/jobs-repo.js";
-import type { CollectionConfig, JobRecord, PlaceCandidate } from "../../storage/schema.js";
+import type { CollectionConfig, JobRecord, PlaceCandidate, ReviewConfig, ReviewSort } from "../../storage/schema.js";
 import type { RuntimePolicyInput } from "../../config/runtime-defaults.js";
 import type { PlacesRepo } from "../../storage/places-repo.js";
+import type { PlaceReviewsRepo } from "../../storage/place-reviews-repo.js";
 import { normalizePlaceRecord } from "../../crawler/maps/normalize-place-record.js";
 import type { ExtractedPlaceDetails } from "../../crawler/maps/extract-place-details.js";
+import { extractPlaceReviews, type NormalizedPlaceReview } from "../../crawler/maps/extract-place-reviews.js";
 import {
   collectPlacesFromMaps,
   type CollectPlacesParams,
@@ -23,6 +25,7 @@ export type WorkerExecutionContext = {
   job: JobRecord;
   jobsRepo: JobsRepo;
   placesRepo: PlacesRepo;
+  placeReviewsRepo: PlaceReviewsRepo;
 };
 
 export type WorkerExecuteJob = (context: WorkerExecutionContext) => Promise<WorkerResult | void>;
@@ -30,11 +33,20 @@ export type WorkerExecuteJob = (context: WorkerExecutionContext) => Promise<Work
 export type CreateJobsWorkerOptions = {
   jobsRepo: JobsRepo;
   placesRepo: PlacesRepo;
+  placeReviewsRepo: PlaceReviewsRepo;
   pollIntervalMs?: number;
   heartbeatIntervalMs?: number;
   executeJob?: WorkerExecuteJob;
   discoverStep?: (step: CollectStep, job: JobRecord) => Promise<PlaceCandidate[]>;
   enrichCandidate?: (candidate: PlaceCandidate, job: JobRecord) => Promise<ExtractedPlaceDetails>;
+  extractReviewsForPlace?: (input: ExtractReviewsForPlaceInput) => Promise<NormalizedPlaceReview[]>;
+};
+
+export type ExtractReviewsForPlaceInput = {
+  candidate: PlaceCandidate;
+  job: JobRecord;
+  sort: ReviewSort;
+  maxReviews: number;
 };
 
 export type JobsWorker = {
@@ -48,6 +60,7 @@ export function createJobsWorker(options: CreateJobsWorkerOptions): JobsWorker {
   const executeJob = options.executeJob ?? defaultExecuteJob;
   const discoverStep = options.discoverStep ?? defaultDiscoverStep;
   const enrichCandidate = options.enrichCandidate ?? defaultEnrichCandidate;
+  const extractReviewsForPlace = options.extractReviewsForPlace ?? defaultExtractReviewsForPlace;
 
   let timer: NodeJS.Timeout | undefined;
   let inFlight = false;
@@ -63,9 +76,11 @@ export function createJobsWorker(options: CreateJobsWorkerOptions): JobsWorker {
       await processNextJob(
         options.jobsRepo,
         options.placesRepo,
+        options.placeReviewsRepo,
         executeJob,
         discoverStep,
         enrichCandidate,
+        extractReviewsForPlace,
         heartbeatIntervalMs
       );
     } finally {
@@ -101,9 +116,11 @@ export function createJobsWorker(options: CreateJobsWorkerOptions): JobsWorker {
 async function processNextJob(
   jobsRepo: JobsRepo,
   placesRepo: PlacesRepo,
+  placeReviewsRepo: PlaceReviewsRepo,
   executeJob: WorkerExecuteJob,
   discoverStep: (step: CollectStep, job: JobRecord) => Promise<PlaceCandidate[]>,
   enrichCandidate: (candidate: PlaceCandidate, job: JobRecord) => Promise<ExtractedPlaceDetails>,
+  extractReviewsForPlace: (input: ExtractReviewsForPlaceInput) => Promise<NormalizedPlaceReview[]>,
   heartbeatIntervalMs: number
 ): Promise<void> {
   const claimedJob = jobsRepo.claimNextQueued();
@@ -124,7 +141,8 @@ async function processNextJob(
         executeJob({
           job: claimedJob,
           jobsRepo,
-          placesRepo
+          placesRepo,
+          placeReviewsRepo
         }),
       {
         ...policy,
@@ -139,6 +157,8 @@ async function processNextJob(
         placesRepo,
         discoverStep,
         enrichCandidate,
+        placeReviewsRepo,
+        extractReviewsForPlace,
         collectPlaces: collectPlacesFromMaps
       });
     }
@@ -182,8 +202,10 @@ function optionsUsesDefaultExecute(executeJob: WorkerExecuteJob): boolean {
 type ExecuteCollectorJobInput = {
   job: JobRecord;
   placesRepo: PlacesRepo;
+  placeReviewsRepo: PlaceReviewsRepo;
   discoverStep: (step: CollectStep, job: JobRecord) => Promise<PlaceCandidate[]>;
   enrichCandidate: (candidate: PlaceCandidate, job: JobRecord) => Promise<ExtractedPlaceDetails>;
+  extractReviewsForPlace: (input: ExtractReviewsForPlaceInput) => Promise<NormalizedPlaceReview[]>;
   collectPlaces: (params: CollectPlacesParams) => Promise<{
     candidates: PlaceCandidate[];
     discoveredCount: number;
@@ -192,6 +214,7 @@ type ExecuteCollectorJobInput = {
 
 async function executeCollectorJob(input: ExecuteCollectorJobInput): Promise<WorkerResult> {
   const controls = parseCollectionConfig(input.job.collectionConfigJson);
+  const reviewConfig = parseReviewConfig(input.job.reviewConfigJson);
   const collected = await input.collectPlaces({
     controls,
     discoverStep: (step) => input.discoverStep(step, input.job)
@@ -215,6 +238,27 @@ async function executeCollectorJob(input: ExecuteCollectorJobInput): Promise<Wor
 
     if (inserted.inserted) {
       uniqueAcceptedCount += 1;
+
+      if (reviewConfig.enabled && reviewConfig.maxReviews > 0) {
+        try {
+          const extracted = await input.extractReviewsForPlace({
+            candidate: enrichedCandidate,
+            job: input.job,
+            sort: reviewConfig.sort,
+            maxReviews: reviewConfig.maxReviews
+          });
+          const capped = extracted.slice(0, reviewConfig.maxReviews);
+          if (capped.length > 0) {
+            input.placeReviewsRepo.insertMany({
+              jobId: input.job.id,
+              placeKey: inserted.placeKey,
+              reviews: capped
+            });
+          }
+        } catch {
+          // review extraction is best-effort per place
+        }
+      }
     }
   }
 
@@ -223,6 +267,15 @@ async function executeCollectorJob(input: ExecuteCollectorJobInput): Promise<Wor
     processedCount: uniqueAcceptedCount,
     uniqueAcceptedCount,
     failedCount: 0
+  };
+}
+
+function parseReviewConfig(raw: string): ReviewConfig {
+  const parsed = JSON.parse(raw) as Partial<ReviewConfig>;
+  return {
+    enabled: parsed.enabled ?? false,
+    sort: parsed.sort ?? "newest",
+    maxReviews: parsed.maxReviews ?? 0
   };
 }
 
@@ -261,4 +314,14 @@ async function defaultEnrichCandidate(candidate: PlaceCandidate): Promise<Extrac
     phone: null,
     openingHoursJson: null
   };
+}
+
+async function defaultExtractReviewsForPlace(
+  input: ExtractReviewsForPlaceInput
+): Promise<NormalizedPlaceReview[]> {
+  return extractPlaceReviews({
+    sort: input.sort,
+    maxReviews: input.maxReviews,
+    fetchReviews: async () => []
+  });
 }
