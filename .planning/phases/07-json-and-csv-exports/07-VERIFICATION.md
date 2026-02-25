@@ -14,10 +14,12 @@ Users can export job outputs into common developer-friendly file formats.
 
 ## Automated Checks
 
+- `npm run build` -> passed
 - `npm run test -- src/output/build-job-results-model.test.ts src/api/routes/job-results.test.ts -x` -> passed
 - `npm run test -- src/output/serializers/job-results-csv.test.ts src/api/routes/job-exports.test.ts -x` -> passed
 - `npm run test -- src/api/routes/job-results.test.ts src/api/routes/job-exports.test.ts src/server.test.ts -x` -> passed
 - `npm run test -- src/output/build-job-results-model.test.ts src/output/serializers/job-results-csv.test.ts src/api/routes/job-results.test.ts src/api/routes/job-exports.test.ts src/server.test.ts -x` -> passed
+- `npm run test -- src/api/routes/job-exports.test.ts src/output/serializers/job-results-csv.test.ts src/api/routes/job-results.test.ts -x` -> passed
 
 ## Requirement Trace
 

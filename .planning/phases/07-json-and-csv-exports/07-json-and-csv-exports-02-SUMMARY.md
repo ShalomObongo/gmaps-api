@@ -58,6 +58,7 @@ Each task was committed atomically:
 
 1. **Task 1: Add CSV serializer and implement export route contract** - `9605807` (feat)
 2. **Task 2: Register export route in server and run endpoint regression checks** - `78f2cf2` (feat)
+3. **Post-task stabilization: Preserve JSON payload under Fastify response typing** - `8c60f8f` (fix)
 
 **Plan metadata:** Included in this plan's docs commit.
 
@@ -75,10 +76,23 @@ Each task was committed atomically:
 
 ## Deviations from Plan
 
-None - plan executed exactly as written.
+### Auto-fixed Issues
+
+**1. [Rule 1 - Bug] Fastify response typing narrowed `reply.code(200)` and caused JSON export payload serialization drift**
+- **Found during:** Post-plan verification (`npm run build` + targeted route tests)
+- **Issue:** With only `404/409` response schemas declared, explicit `.code(200)` calls were typed to error-status responses and a temporary broad `200` schema caused JSON payload to serialize as `{}`.
+- **Fix:** Removed explicit `.code(200)` from success branches and relied on default 200 responses with explicit content-type/attachment headers.
+- **Files modified:** `src/api/routes/job-exports.ts`
+- **Verification:** `npm run build` and `npm run test -- src/api/routes/job-exports.test.ts src/output/serializers/job-results-csv.test.ts src/api/routes/job-results.test.ts -x`
+- **Committed in:** `8c60f8f`
+
+---
+
+**Total deviations:** 1 auto-fixed (1 bug)
+**Impact on plan:** No scope expansion; change preserves intended export behavior and compile safety.
 
 ## Issues Encountered
-None.
+- Initial post-implementation type-check exposed status-code typing constraints in Fastify route schemas; fixed by using default 200 sends for success branches.
 
 ## User Setup Required
 
