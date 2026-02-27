@@ -1,53 +1,83 @@
-# gmaps-api
+<div align="center">
 
-Local-first Fastify API for collecting structured Google Maps place data with conservative safety defaults.
+<img src="docs/banner.svg" alt="gmaps-api banner" width="900"/>
 
-The service accepts a crawl request, persists a queued job in SQLite, runs collection in a background worker, and exposes status/results/export endpoints.
+**Local-first Google Maps data collection — no paid proxies, no captcha providers, no surprises.**
 
-## Why this exists
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-brightgreen?logo=node.js&logoColor=white)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Fastify](https://img.shields.io/badge/Fastify-5.x-000000?logo=fastify&logoColor=white)](https://fastify.dev)
+[![Playwright](https://img.shields.io/badge/Playwright-1.x-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev)
+[![Vitest](https://img.shields.io/badge/Vitest-3.x-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev)
+[![SQLite](https://img.shields.io/badge/SQLite-local--first-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org)
 
-- Run locally without requiring paid proxy or captcha providers.
-- Keep runtime behavior explicit (rate limits, retry/backoff, sensitive-field opt-in).
-- Return predictable JSON/CSV output for downstream tooling.
+*Submit a crawl request → background worker collects data → retrieve results as JSON or CSV.*
 
-## Quickstart
+</div>
 
-### 1) Prerequisites
+---
 
-- Node.js `>=22`
-- npm
+## ✨ Why this exists
 
-Install dependencies and Playwright browser binaries:
+| | |
+|---|---|
+| 🏠 **Runs entirely locally** | No paid proxy or captcha provider required |
+| 🔍 **Explicit runtime behaviour** | Rate limits, retry/backoff, and pacing are visible and configurable |
+| 🔒 **Sensitive fields are opt-in** | Phone, email, and other PII require a deliberate request |
+| 📦 **Predictable output** | JSON and CSV exports ready for downstream tooling |
+| 🗄️ **SQLite-backed persistence** | Zero external infrastructure — just a local file |
+
+---
+
+## 📋 Table of Contents
+
+- [Quickstart](#-quickstart)
+- [API Flow](#-api-flow)
+- [Job Lifecycle](#-job-lifecycle)
+- [Environment Variables](#-environment-variables)
+- [API Endpoints](#-api-endpoints)
+- [Documentation](#-documentation)
+
+---
+
+## 🚀 Quickstart
+
+### 1 — Prerequisites
+
+- **Node.js** `>=22`
+- **npm**
 
 ```bash
 npm install
-npx playwright install
+npx playwright install   # installs browser binaries used by the crawler
 ```
 
-### 2) Configure environment
+### 2 — Configure environment
 
-The API reads configuration from environment variables. For a first run, defaults are enough:
+Zero configuration is required for a first run. Sensible defaults are applied automatically:
 
-- `PORT=3000`
-- `DATABASE_FILE=./storage/local.db`
-- `LOG_LEVEL=info`
+| Variable | Default | Description |
+|---|---|---|
+| `PORT` | `3000` | HTTP server port |
+| `DATABASE_FILE` | `./storage/local.db` | SQLite database path |
+| `LOG_LEVEL` | `info` | Pino log level |
+| `PROXY_URL` | *(unset)* | Optional proxy endpoint |
+| `CAPTCHA_PROVIDER` | *(unset)* | Optional captcha config |
 
-Optional provider settings exist for advanced runs (`PROXY_URL`, `CAPTCHA_PROVIDER`). See `docs/operations.md`.
+> See [docs/operations.md](docs/operations.md) for the full variable reference and runtime policy bounds.
 
-### 3) Build and start
+### 3 — Build and start
 
 ```bash
 npm run build
 npm start
 ```
 
-Health check:
+Verify the server is healthy:
 
 ```bash
 curl -s http://localhost:3000/health
 ```
-
-Expected shape:
 
 ```json
 {
@@ -56,11 +86,14 @@ Expected shape:
 }
 ```
 
-## Minimal API flow
+---
 
-Create a job:
+## 🔄 API Flow
+
+A complete collection run in four commands:
 
 ```bash
+# 1. Submit a job
 curl -s -X POST http://localhost:3000/jobs \
   -H 'content-type: application/json' \
   -d '{
@@ -69,23 +102,74 @@ curl -s -X POST http://localhost:3000/jobs \
     "location": "seattle wa",
     "collection": { "maxPlaces": 40 }
   }'
+# → 202  { "jobId": "d8cbf4c2-...", "status": "queued" }
+
+# 2. Poll until completed
+curl -s http://localhost:3000/jobs/d8cbf4c2-...
+
+# 3. Read structured results
+curl -s http://localhost:3000/jobs/d8cbf4c2-.../results
+
+# 4. Download an export
+curl -s "http://localhost:3000/jobs/d8cbf4c2-.../exports?format=csv" -o places.csv
+curl -s "http://localhost:3000/jobs/d8cbf4c2-.../exports?format=json" -o places.json
 ```
 
-The API responds with `202` and a `jobId`. Then:
+### Input types
 
-1. Poll status: `GET /jobs/:id`
-2. Read completed results: `GET /jobs/:id/results`
-3. Download export: `GET /jobs/:id/exports?format=json|csv`
+| `inputType` | Required fields |
+|---|---|
+| `keyword_location` | `query`, `location` |
+| `maps_url` | `url` — canonical `https://www.google.com/maps/search/…` |
+| `place_id` | `placeId` |
 
-Important state semantics:
+---
 
-- `404 not_found`: job id does not exist.
-- `409 results_not_ready`: job exists but is `queued`, `running`, or `failed`.
-- `200`: results/exports are available only when status is `completed`.
+## 🔁 Job Lifecycle
 
-## Documentation
+```
+POST /jobs
+    │
+    ▼
+┌─────────┐     background worker claims job
+│  queued │ ──────────────────────────────────►  running
+└─────────┘                                         │
+                                            ┌───────┴────────┐
+                                            ▼                ▼
+                                        completed          failed
+                                            │
+                              ┌─────────────┼─────────────┐
+                              ▼             ▼             ▼
+                         GET results   GET status   GET exports
+```
 
-- Runtime setup, env defaults, safety controls, troubleshooting: `docs/operations.md`
-- Contributor workflow and test commands: `docs/development.md`
-- Endpoint contract and payload examples: `docs/api.md`
-- Module wiring and runtime data flow: `docs/architecture.md`
+**Status semantics for results & exports endpoints:**
+
+| HTTP status | Meaning |
+|---|---|
+| `200 OK` | Job is `completed` — data is available |
+| `404 Not Found` | Job ID does not exist |
+| `409 Conflict` | Job exists but is `queued`, `running`, or `failed` |
+
+---
+
+## 🌐 API Endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/health` | Liveness check and guardrail notice |
+| `POST` | `/jobs` | Submit a new collection job |
+| `GET` | `/jobs/:id` | Poll job status and metadata |
+| `GET` | `/jobs/:id/results` | Retrieve structured place results |
+| `GET` | `/jobs/:id/exports` | Download JSON or CSV export (`?format=json\|csv`) |
+
+---
+
+## 📚 Documentation
+
+| Document | Contents |
+|---|---|
+| [docs/api.md](docs/api.md) | Full endpoint contract, request/response shapes, and examples |
+| [docs/architecture.md](docs/architecture.md) | Module boundaries, runtime data flow, and worker lifecycle |
+| [docs/operations.md](docs/operations.md) | Environment variables, safety defaults, and troubleshooting |
+| [docs/development.md](docs/development.md) | Contributor workflow, test commands, and dev scripts |

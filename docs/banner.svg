@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" width="900" height="240">
+  <defs>
+    <!-- Main background gradient -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="55%" style="stop-color:#0f1e2e"/>
+      <stop offset="100%" style="stop-color:#0d2137"/>
+    </linearGradient>
+
+    <!-- Pin glow -->
+    <radialGradient id="pinGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4ade80;stop-opacity:0.25"/>
+      <stop offset="100%" style="stop-color:#4ade80;stop-opacity:0"/>
+    </radialGradient>
+
+    <!-- Accent line gradient -->
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4ade80;stop-opacity:0"/>
+      <stop offset="30%" style="stop-color:#4ade80;stop-opacity:0.8"/>
+      <stop offset="70%" style="stop-color:#38bdf8;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#38bdf8;stop-opacity:0"/>
+    </linearGradient>
+
+    <!-- Text shimmer gradient -->
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f0fdf4"/>
+      <stop offset="45%" style="stop-color:#4ade80"/>
+      <stop offset="100%" style="stop-color:#38bdf8"/>
+    </linearGradient>
+
+    <!-- Grid fade mask -->
+    <radialGradient id="gridMask" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" style="stop-color:white;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:white;stop-opacity:0"/>
+    </radialGradient>
+    <mask id="gridFade">
+      <rect width="900" height="240" fill="url(#gridMask)"/>
+    </mask>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="240" fill="url(#bg)" rx="12"/>
+
+  <!-- Subtle map grid lines -->
+  <g mask="url(#gridFade)" opacity="0.12" stroke="#4ade80" stroke-width="0.6" fill="none">
+    <!-- Vertical -->
+    <line x1="100" y1="0" x2="100" y2="220"/>
+    <line x1="200" y1="0" x2="200" y2="220"/>
+    <line x1="300" y1="0" x2="300" y2="220"/>
+    <line x1="400" y1="0" x2="400" y2="220"/>
+    <line x1="500" y1="0" x2="500" y2="220"/>
+    <line x1="600" y1="0" x2="600" y2="220"/>
+    <line x1="700" y1="0" x2="700" y2="220"/>
+    <line x1="800" y1="0" x2="800" y2="220"/>
+    <!-- Horizontal -->
+    <line x1="0" y1="60" x2="900" y2="60"/>
+    <line x1="0" y1="120" x2="900" y2="120"/>
+    <line x1="0" y1="180" x2="900" y2="180"/>
+  </g>
+
+  <!-- Simulated map route path (left side decorative) -->
+  <g opacity="0.18" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="30,60 80,60 80,100 140,100 140,80 190,80"/>
+  </g>
+  <g opacity="0.12" fill="none" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="30,140 60,140 60,160 110,160 110,130 160,130 160,150 200,150"/>
+  </g>
+
+  <!-- Right-side route curves -->
+  <g opacity="0.15" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="720,40 760,40 760,80 820,80 820,60 870,60"/>
+    <polyline points="700,160 750,160 750,140 800,140 800,170 860,170"/>
+  </g>
+
+  <!-- Pin glow circles (left cluster) -->
+  <circle cx="80" cy="60" r="28" fill="url(#pinGlow)"/>
+  <circle cx="140" cy="100" r="22" fill="url(#pinGlow)"/>
+
+  <!-- Pin glow circles (right cluster) -->
+  <circle cx="760" cy="80" r="24" fill="url(#pinGlow)" opacity="0.7"/>
+  <circle cx="800" cy="140" r="20" fill="url(#pinGlow)" opacity="0.6"/>
+
+  <!-- Small map dots (left) -->
+  <circle cx="80" cy="60" r="4" fill="#4ade80" opacity="0.9"/>
+  <circle cx="140" cy="100" r="3.5" fill="#38bdf8" opacity="0.85"/>
+  <circle cx="190" cy="80" r="3" fill="#4ade80" opacity="0.7"/>
+  <circle cx="110" cy="130" r="3" fill="#38bdf8" opacity="0.6"/>
+  <circle cx="160" cy="150" r="2.5" fill="#4ade80" opacity="0.5"/>
+
+  <!-- Small map dots (right) -->
+  <circle cx="760" cy="80" r="4" fill="#38bdf8" opacity="0.85"/>
+  <circle cx="820" cy="60" r="3" fill="#4ade80" opacity="0.7"/>
+  <circle cx="750" cy="160" r="3.5" fill="#38bdf8" opacity="0.75"/>
+  <circle cx="800" cy="140" r="3" fill="#4ade80" opacity="0.6"/>
+
+  <!-- Center map pin icon (scaled 0.55×, tip lands at ~y=52, above title) -->
+  <g transform="translate(418.65, 2.5) scale(0.55)">
+    <!-- Pin body -->
+    <path d="M57,18 C43,18 32,29 32,43 C32,62 57,90 57,90 C57,90 82,62 82,43 C82,29 71,18 57,18 Z"
+          fill="#4ade80" opacity="0.95"/>
+    <!-- Pin inner circle -->
+    <circle cx="57" cy="43" r="12" fill="#0d1117" opacity="0.85"/>
+    <!-- Pin dot -->
+    <circle cx="57" cy="43" r="5" fill="#4ade80"/>
+  </g>
+
+  <!-- Accent divider line -->
+  <rect x="150" y="126" width="600" height="1.5" fill="url(#lineGrad)" rx="1"/>
+
+  <!-- Main title -->
+  <text x="450" y="115" font-family="'Segoe UI', 'SF Pro Display', -apple-system, sans-serif"
+        font-size="48" font-weight="700" text-anchor="middle" letter-spacing="-1"
+        fill="url(#titleGrad)">gmaps-api</text>
+
+  <!-- Subtitle -->
+  <text x="450" y="162" font-family="'Segoe UI', 'SF Pro Text', -apple-system, sans-serif"
+        font-size="15.5" font-weight="400" text-anchor="middle" letter-spacing="0.3"
+        fill="#94a3b8">Local-first Google Maps data collection</text>
+
+  <!-- Tag pills -->
+  <!-- Pill 1 -->
+  <rect x="208" y="182" width="110" height="26" rx="13" fill="#4ade80" opacity="0.12"/>
+  <rect x="208" y="182" width="110" height="26" rx="13" fill="none" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/>
+  <text x="263" y="199.5" font-family="'Segoe UI', monospace, sans-serif" font-size="11.5"
+        font-weight="500" text-anchor="middle" fill="#4ade80" opacity="0.9">Node.js ≥ 22</text>
+
+  <!-- Pill 2 -->
+  <rect x="330" y="182" width="88" height="26" rx="13" fill="#38bdf8" opacity="0.1"/>
+  <rect x="330" y="182" width="88" height="26" rx="13" fill="none" stroke="#38bdf8" stroke-width="0.8" opacity="0.4"/>
+  <text x="374" y="199.5" font-family="'Segoe UI', monospace, sans-serif" font-size="11.5"
+        font-weight="500" text-anchor="middle" fill="#38bdf8" opacity="0.9">Fastify 5</text>
+
+  <!-- Pill 3 -->
+  <rect x="430" y="182" width="88" height="26" rx="13" fill="#a78bfa" opacity="0.1"/>
+  <rect x="430" y="182" width="88" height="26" rx="13" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.4"/>
+  <text x="474" y="199.5" font-family="'Segoe UI', monospace, sans-serif" font-size="11.5"
+        font-weight="500" text-anchor="middle" fill="#a78bfa" opacity="0.9">SQLite</text>
+
+  <!-- Pill 4 -->
+  <rect x="530" y="182" width="110" height="26" rx="13" fill="#fb923c" opacity="0.1"/>
+  <rect x="530" y="182" width="110" height="26" rx="13" fill="none" stroke="#fb923c" stroke-width="0.8" opacity="0.4"/>
+  <text x="585" y="199.5" font-family="'Segoe UI', monospace, sans-serif" font-size="11.5"
+        font-weight="500" text-anchor="middle" fill="#fb923c" opacity="0.9">Playwright</text>
+
+  <!-- Border -->
+  <rect width="900" height="240" fill="none" stroke="#4ade80" stroke-width="1" opacity="0.15" rx="12"/>
+</svg>
