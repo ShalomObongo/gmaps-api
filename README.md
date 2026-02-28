@@ -134,6 +134,8 @@ Open [`http://localhost:3000`](http://localhost:3000) (or `/ui`) to use the buil
 
 `collection.maxPlaces` sets your target item count. For stronger attempts to hit that target, pass `collection.stopOnNoGrowth=false` so the crawler does not exit early on temporary no-growth streaks.
 
+When reviews are enabled, `reviews.maxReviews` sets the per-place review cap (`0..200`). There is no fixed 20-result cap; the worker attempts to collect up to your requested count (best effort).
+
 ---
 
 ## 🔁 Job Lifecycle

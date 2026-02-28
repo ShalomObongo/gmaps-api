@@ -42,6 +42,8 @@ Common fields:
 - `reviews.enabled` (optional, default `false`)
 - `reviews.sort` (optional: `newest`, `most_relevant`, `highest_rating`, `lowest_rating`; default `newest`)
 - `reviews.maxReviews` (optional, integer `0..200`, default `0`)
+  - Per-place review cap when `reviews.enabled=true`.
+  - The worker attempts to return up to this value (no fixed `20` cap), but extraction is best-effort and may return fewer.
 - `policy` (optional runtime overrides within server-enforced bounds)
 - `includeSensitiveFields` + `requestedFields` (optional; sensitive requests require explicit opt-in)
 

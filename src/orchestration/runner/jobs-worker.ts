@@ -10,6 +10,10 @@ import type { ExtractedPlaceDetails } from "../../crawler/maps/extract-place-det
 import { extractPlaceReviews, type NormalizedPlaceReview } from "../../crawler/maps/extract-place-reviews.js";
 import { closeLiveEnrichmentSession, enrichPlaceLive } from "../../crawler/maps/enrich-place-live.js";
 import {
+  closeLiveReviewsSession,
+  extractPlaceReviewsLive
+} from "../../crawler/maps/extract-place-reviews-live.js";
+import {
   collectPlacesFromMaps,
   type CollectPlacesParams,
   type CollectStep
@@ -330,7 +334,11 @@ async function closeDefaultDiscoverySession(jobId: string): Promise<void> {
 }
 
 async function closeDefaultLiveSessions(jobId: string): Promise<void> {
-  await Promise.allSettled([closeDefaultDiscoverySession(jobId), closeLiveEnrichmentSession(jobId)]);
+  await Promise.allSettled([
+    closeDefaultDiscoverySession(jobId),
+    closeLiveEnrichmentSession(jobId),
+    closeLiveReviewsSession(jobId)
+  ]);
 }
 
 function useStubDiscovery(): boolean {
@@ -353,6 +361,14 @@ async function defaultEnrichCandidate(candidate: PlaceCandidate, job: JobRecord)
 async function defaultExtractReviewsForPlace(
   input: ExtractReviewsForPlaceInput
 ): Promise<NormalizedPlaceReview[]> {
+  if (!input.candidate.mapsUrl) {
+    return [];
+  }
+
+  if (!useStubDiscovery()) {
+    return extractPlaceReviewsLive(input);
+  }
+
   return extractPlaceReviews({
     sort: input.sort,
     maxReviews: input.maxReviews,

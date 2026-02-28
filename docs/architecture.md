@@ -65,6 +65,12 @@ Collection and enrichment are invoked from `jobs-worker.ts` through functions su
 - `enrichPlaceLive`
 - `extractPlaceReviews`
 
+Review extraction strategy (`src/crawler/maps/extract-place-reviews-live.ts`):
+
+- Primary path: calls Google Maps review payload endpoint (`/maps/preview/review/listentitiesreviews`) using runtime-derived entity IDs and session token.
+- Fallback path: opens the reviews panel in the rendered page and scrapes visible review cards when endpoint extraction is unavailable.
+- `reviews.maxReviews` controls the per-place cap (`0..200`), with best-effort semantics when Google returns fewer items.
+
 ## 4) Storage layer (`src/storage`)
 
 - SQLite database setup and schema/migrations (`src/storage/db.ts`, `src/storage/migrations.ts`).
