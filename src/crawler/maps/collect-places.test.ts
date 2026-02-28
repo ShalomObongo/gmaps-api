@@ -62,6 +62,23 @@ describe("collectPlacesFromMaps", () => {
     expect(result.scrollStepsUsed).toBe(6);
     expect(result.candidates).toHaveLength(6);
   });
+
+  it("can continue after growth stalls when stopOnNoGrowth is disabled", async () => {
+    const result = await collectPlacesFromMaps({
+      controls: {
+        maxPlaces: 50,
+        maxScrollSteps: 4,
+        maxViewportPans: 0
+      },
+      discoverStep: createScriptedDiscoverer([2, 1, 0, 0, 0]),
+      noGrowthThreshold: 2,
+      stopOnNoGrowth: false
+    });
+
+    expect(result.stopReason).toBe("viewport_budget_exhausted");
+    expect(result.scrollStepsUsed).toBe(5);
+    expect(result.candidates).toHaveLength(3);
+  });
 });
 
 function createScriptedDiscoverer(counts: number[]): (step: {

@@ -3,7 +3,8 @@ import type { ReviewSort } from "../../storage/schema.js";
 
 export const DEFAULT_COLLECTION_CONTROLS = {
   maxScrollSteps: 20,
-  maxViewportPans: 0
+  maxViewportPans: 0,
+  stopOnNoGrowth: true
 } as const;
 
 export const DEFAULT_REVIEW_CONTROLS = {
@@ -16,6 +17,7 @@ export type NormalizedCollectionControls = {
   maxPlaces: number;
   maxScrollSteps: number;
   maxViewportPans: number;
+  stopOnNoGrowth: boolean;
 };
 
 export type NormalizedReviewControls = {
@@ -87,7 +89,8 @@ function normalizeCollectionControls(input: JobInput): NormalizedCollectionContr
   return {
     maxPlaces: input.collection.maxPlaces,
     maxScrollSteps: input.collection.maxScrollSteps ?? DEFAULT_COLLECTION_CONTROLS.maxScrollSteps,
-    maxViewportPans: input.collection.maxViewportPans ?? DEFAULT_COLLECTION_CONTROLS.maxViewportPans
+    maxViewportPans: input.collection.maxViewportPans ?? DEFAULT_COLLECTION_CONTROLS.maxViewportPans,
+    stopOnNoGrowth: input.collection.stopOnNoGrowth ?? DEFAULT_COLLECTION_CONTROLS.stopOnNoGrowth
   };
 }
 

@@ -2,6 +2,14 @@
 
 Base URL (local): `http://localhost:3000`
 
+## `GET /` and `GET /ui`
+
+Returns the built-in Control Center HTML UI for submitting jobs, monitoring status, inspecting results, and downloading exports.
+
+### Response
+
+- `200 OK` with `text/html`
+
 ## `GET /health`
 
 Returns service health and guardrail notice.
@@ -30,6 +38,7 @@ Common fields:
 - `collection.maxPlaces` (required, integer `1..500`)
 - `collection.maxScrollSteps` (optional, integer `0..100`, default `20`)
 - `collection.maxViewportPans` (optional, integer `0..25`, default `0`)
+- `collection.stopOnNoGrowth` (optional, boolean, default `true`) — when `false`, the collector keeps trying through scroll/pan budgets instead of exiting early after no-growth streaks
 - `reviews.enabled` (optional, default `false`)
 - `reviews.sort` (optional: `newest`, `most_relevant`, `highest_rating`, `lowest_rating`; default `newest`)
 - `reviews.maxReviews` (optional, integer `0..200`, default `0`)

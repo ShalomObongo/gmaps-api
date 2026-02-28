@@ -12,6 +12,7 @@ At startup, the server:
 2. Creates SQLite-backed repositories (`src/storage/*-repo.ts`).
 3. Registers API plugins/routes:
    - `registerRateLimitPlugin`
+   - `registerUiRoutes`
    - `registerJobRoutes`
    - `registerJobStatusRoutes`
    - `registerJobResultsRoutes`
@@ -27,6 +28,7 @@ At startup, the server:
 - Validates and normalizes incoming payloads.
 - Persists queued jobs.
 - Exposes job status, results, and export endpoints.
+- Serves the Control Center UI at `/` and `/ui`.
 - Enforces rate limits and request-level guardrail behavior.
 
 Important files:

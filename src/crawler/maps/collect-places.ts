@@ -4,6 +4,7 @@ export type CollectPlacesParams = {
   controls: CollectionConfig;
   discoverStep: (step: CollectStep) => Promise<PlaceCandidate[]>;
   noGrowthThreshold?: number;
+  stopOnNoGrowth?: boolean;
 };
 
 export type CollectStep = {
@@ -21,6 +22,7 @@ export type CollectPlacesResult = {
 
 export async function collectPlacesFromMaps(params: CollectPlacesParams): Promise<CollectPlacesResult> {
   const noGrowthThreshold = Math.max(1, params.noGrowthThreshold ?? 2);
+  const stopOnNoGrowth = params.stopOnNoGrowth ?? true;
   const accepted: PlaceCandidate[] = [];
 
   let discoveredCount = 0;
@@ -59,7 +61,7 @@ export async function collectPlacesFromMaps(params: CollectPlacesParams): Promis
       }
 
       previousDiscoveredCount = discoveredCount;
-      if (noGrowthStreak >= noGrowthThreshold) {
+      if (stopOnNoGrowth && noGrowthStreak >= noGrowthThreshold) {
         stopReason = "no_growth";
         return {
           candidates: accepted,

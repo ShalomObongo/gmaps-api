@@ -4,6 +4,7 @@ export type CollectionConfig = {
   maxPlaces: number;
   maxScrollSteps: number;
   maxViewportPans: number;
+  stopOnNoGrowth?: boolean;
 };
 
 export type ReviewSort = "newest" | "most_relevant" | "highest_rating" | "lowest_rating";

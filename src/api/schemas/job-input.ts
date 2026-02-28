@@ -23,7 +23,8 @@ export const collectionControlsSchema = z.object({
     .int()
     .min(COLLECTION_LIMITS.maxViewportPans.min)
     .max(COLLECTION_LIMITS.maxViewportPans.max)
-    .optional()
+    .optional(),
+  stopOnNoGrowth: z.boolean().optional()
 });
 
 export const jobPolicySchema = z.object({

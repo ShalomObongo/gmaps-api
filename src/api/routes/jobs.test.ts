@@ -50,7 +50,8 @@ describe("POST /jobs", () => {
     expect(body.input.collection).toMatchObject({
       maxPlaces: 40,
       maxScrollSteps: 20,
-      maxViewportPans: 0
+      maxViewportPans: 0,
+      stopOnNoGrowth: true
     });
     expect(body.input.reviews).toMatchObject({
       enabled: false,
@@ -94,7 +95,8 @@ describe("POST /jobs", () => {
       collection: {
         maxPlaces: 75,
         maxScrollSteps: 12,
-        maxViewportPans: 0
+        maxViewportPans: 0,
+        stopOnNoGrowth: true
       },
       reviews: {
         enabled: true,
@@ -133,7 +135,8 @@ describe("POST /jobs", () => {
       collection: {
         maxPlaces: 25,
         maxScrollSteps: 20,
-        maxViewportPans: 2
+        maxViewportPans: 2,
+        stopOnNoGrowth: true
       },
       reviews: {
         enabled: false,
@@ -266,6 +269,38 @@ describe("POST /jobs", () => {
 
     expect(response.statusCode).toBe(400);
     expect(response.json()).toMatchObject({ error: "invalid_request" });
+
+    await app.close();
+  });
+
+  it("accepts stopOnNoGrowth override in collection controls", async () => {
+    workDir = mkdtempSync(join(tmpdir(), "gmaps-api-"));
+    const app = await buildServer({ databaseFile: join(workDir, "local.db"), logger: false });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/jobs",
+      payload: {
+        inputType: "keyword_location",
+        query: "water",
+        location: "nairobi",
+        collection: {
+          maxPlaces: 40,
+          maxScrollSteps: 30,
+          maxViewportPans: 5,
+          stopOnNoGrowth: false
+        }
+      }
+    });
+
+    expect(response.statusCode).toBe(202);
+    const body = response.json();
+    expect(body.input.collection).toMatchObject({
+      maxPlaces: 40,
+      maxScrollSteps: 30,
+      maxViewportPans: 5,
+      stopOnNoGrowth: false
+    });
 
     await app.close();
   });

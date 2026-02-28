@@ -115,6 +115,15 @@ curl -s "http://localhost:3000/jobs/d8cbf4c2-.../exports?format=csv" -o places.c
 curl -s "http://localhost:3000/jobs/d8cbf4c2-.../exports?format=json" -o places.json
 ```
 
+### Control Center UI
+
+Open [`http://localhost:3000`](http://localhost:3000) (or `/ui`) to use the built-in Control Center:
+
+- Compose and submit all `POST /jobs` input variants.
+- Monitor live status and progress from `GET /jobs/:id`.
+- Load and explore `GET /jobs/:id/results` with place/review drilldown.
+- Trigger JSON/CSV exports from `GET /jobs/:id/exports`.
+
 ### Input types
 
 | `inputType` | Required fields |
@@ -122,6 +131,8 @@ curl -s "http://localhost:3000/jobs/d8cbf4c2-.../exports?format=json" -o places.
 | `keyword_location` | `query`, `location` |
 | `maps_url` | `url` — canonical `https://www.google.com/maps/search/…` |
 | `place_id` | `placeId` |
+
+`collection.maxPlaces` sets your target item count. For stronger attempts to hit that target, pass `collection.stopOnNoGrowth=false` so the crawler does not exit early on temporary no-growth streaks.
 
 ---
 
@@ -158,6 +169,8 @@ POST /jobs
 | Method | Path | Description |
 |---|---|---|
 | `GET` | `/health` | Liveness check and guardrail notice |
+| `GET` | `/` | Control Center UI |
+| `GET` | `/ui` | Alternate Control Center UI path |
 | `POST` | `/jobs` | Submit a new collection job |
 | `GET` | `/jobs/:id` | Poll job status and metadata |
 | `GET` | `/jobs/:id/results` | Retrieve structured place results |

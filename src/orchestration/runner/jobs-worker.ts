@@ -222,6 +222,7 @@ async function executeCollectorJob(input: ExecuteCollectorJobInput): Promise<Wor
   const reviewConfig = parseReviewConfig(input.job.reviewConfigJson);
   const collected = await input.collectPlaces({
     controls,
+    stopOnNoGrowth: controls.stopOnNoGrowth ?? true,
     discoverStep: (step) => input.discoverStep(step, input.job)
   });
 
@@ -290,7 +291,8 @@ function parseCollectionConfig(raw: string): CollectionConfig {
   return {
     maxPlaces: parsed.maxPlaces ?? 25,
     maxScrollSteps: parsed.maxScrollSteps ?? 20,
-    maxViewportPans: parsed.maxViewportPans ?? 0
+    maxViewportPans: parsed.maxViewportPans ?? 0,
+    stopOnNoGrowth: parsed.stopOnNoGrowth ?? true
   };
 }
 
